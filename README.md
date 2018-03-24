@@ -1,4 +1,4 @@
-# Opiniated NodeJS API with Koa Boilerplate
+# Opinionated NodeJS API with Koa Boilerplate
 
 This repo contains a basic project based on NodeJS and Koa (and some other libs) implementing a basic API to manage TODOs. Obviously, you're not going to handle just TODOs in all your projet, so all the code is commented to be easily changed and adapted to your needs.
 
