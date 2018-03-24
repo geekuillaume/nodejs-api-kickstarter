@@ -1,0 +1,77 @@
+{
+  "name": "koa-boilerplate",
+  "version": "1.0.0",
+  "description": "A Koa API server boilerplate",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "NODE_ENV=test jest --verbose",
+    "test:watch": "NODE_ENV=test jest --watch --verbose",
+    "test:coverage": "NODE_ENV=test jest --coverage",
+    "watch": "nodemon --watch 'src/**/*' -e ts,tsx --exec 'ts-node' ./src/index.ts",
+    "start": "ts-node ./src/index.ts",
+    "lint": "eslint src/**/*.ts",
+    "lint-staged": "lint-staged"
+  },
+  "keywords": [
+    "koa",
+    "boilerplate",
+    "api"
+  ],
+  "author": "Guillaume \"geekuillaume\" Besson",
+  "license": "MIT",
+  "dependencies": {
+    "bristol": "^0.4.0",
+    "config": "^1.30.0",
+    "koa": "^2.5.0",
+    "koa-body": "^2.5.0",
+    "koa-router": "^7.4.0",
+    "winston": "^3.0.0-rc3"
+  },
+  "devDependencies": {
+    "@types/config": "0.0.34",
+    "@types/jest": "^22.2.2",
+    "@types/koa": "^2.0.44",
+    "@types/koa-router": "^7.0.27",
+    "@types/supertest": "^2.0.4",
+    "@types/winston": "^2.3.8",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jest": "^21.15.0",
+    "eslint-plugin-typescript": "^0.10.0",
+    "husky": "^0.15.0-rc.13",
+    "jest": "^22.4.3",
+    "lint-staged": "^7.0.0",
+    "nodemon": "^1.17.2",
+    "supertest": "^3.0.0",
+    "ts-jest": "^22.4.2",
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2",
+    "typescript-eslint-parser": "^14.0.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "/src/.*\\.test\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run --silent lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}
