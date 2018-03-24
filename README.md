@@ -5,6 +5,7 @@ This repo contains a basic project based on NodeJS and Koa (and some other libs)
 It's meant to be used with a front-end consuming the API like a mobile app or a SPA like [React](https://reactjs.org/) / [Angular](https://angular.io/) / [Vue](https://vuejs.org/index.html).
 
 The project packs some useful things for your needs:
+
 - [Koa](http://koajs.com/) with async/await code to handle asynchronous tasks
 - [TypeScript](http://www.typescriptlang.org/) for awesome Developer Experience
 - Separated routers with [Koa-Router](https://github.com/alexmingoia/koa-router)
@@ -18,7 +19,7 @@ The project packs some useful things for your needs:
 - [Nodemon](https://github.com/remy/nodemon) to auto-reload your server when saving
 
 TODO:
-- [Sentry] integration (optionnal)
+- [Sentry] integration (optional)
 - SQL integration with [Knex](http://knexjs.org/)
 - Email/password account creation API routes with email confirmation
 - Password reset via email
