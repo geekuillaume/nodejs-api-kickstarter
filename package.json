@@ -10,7 +10,9 @@
     "watch": "nodemon --watch 'src/**/*' -e ts,tsx --exec 'ts-node' ./src/index.ts",
     "start": "ts-node ./src/index.ts",
     "lint": "eslint src/**/*.ts",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "db:createMigration": "knex migrate:make",
+    "db:migrate": "knex migrate:latest"
   },
   "keywords": [
     "koa",
@@ -22,14 +24,20 @@
   "dependencies": {
     "bristol": "^0.4.0",
     "config": "^1.30.0",
+    "knex": "^0.14.4",
+    "knex-cleaner": "^1.1.4",
     "koa": "^2.5.0",
     "koa-body": "^2.5.0",
     "koa-router": "^7.4.0",
+    "pretty-error": "^2.1.1",
+    "sqlite3": "^4.0.0",
     "winston": "^3.0.0-rc3"
   },
   "devDependencies": {
     "@types/config": "0.0.34",
+    "@types/faker": "^4.1.2",
     "@types/jest": "^22.2.2",
+    "@types/knex": "^0.14.9",
     "@types/koa": "^2.0.44",
     "@types/koa-router": "^7.0.27",
     "@types/supertest": "^2.0.4",
@@ -39,6 +47,7 @@
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jest": "^21.15.0",
     "eslint-plugin-typescript": "^0.10.0",
+    "faker": "^4.1.0",
     "husky": "^0.15.0-rc.13",
     "jest": "^22.4.3",
     "lint-staged": "^7.0.0",

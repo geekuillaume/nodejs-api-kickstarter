@@ -1,5 +1,6 @@
 import * as Koa from 'koa';
-import { getTodos } from '../../models/todos';
+import { getTodos, createTodo as createTodoInDb } from '../../models/todos/todosModel';
+import { BadRequest } from '../../lib/errors';
 
 const listTodos : Koa.Middleware = async (ctx) => {
   const todos = await getTodos();
@@ -12,4 +13,12 @@ const getTodo : Koa.Middleware = async (ctx) => {
   ctx.body = ctx.todo;
 };
 
-export { listTodos, getTodo };
+const createTodo : Koa.Middleware = async (ctx) => {
+  BadRequest.assert(typeof ctx.request.body === 'object', 'Body must be an object');
+  BadRequest.assert(typeof ctx.request.body.name === 'string', 'Name must be a string');
+  const todo = await createTodoInDb(ctx.request.body);
+  ctx.body = todo;
+  ctx.status = 201;
+};
+
+export { listTodos, getTodo, createTodo };

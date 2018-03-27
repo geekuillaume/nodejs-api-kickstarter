@@ -17,12 +17,29 @@ The project packs some useful things for your needs:
 - [Eslint](https://eslint.org/) linting with pre-commit test and auto-fixing
 - [Node-Config](https://github.com/lorenwest/node-config) for configuration and environment variable handling
 - [Nodemon](https://github.com/remy/nodemon) to auto-reload your server when saving
+- SQL integration with [Knex](http://knexjs.org/)
 
-TODO:
+## Config
+
+This project uses [node-config](https://github.com/lorenwest/node-config) to handle the different configuration options. I highly recommend you to read this module README to learn about the different ways to configure this project for different environments. The [config/local.js](config/local.js) file should be used for secrets in development.
+
+## SQL
+
+The SQL integration is made with [Knex](http://knexjs.org/). By default, only the sqlite adapter is installed but Knex allows you to use a lot of different SQL servers. You need to install the adapter for the server you're going to use, look at the documentation for more [information](http://knexjs.org/#Installation-node).
+
+The sqlite adapter is primarly used as an in-memory portable database and shouldn't be used for production purposes. It's integrated by default because it's the simplest way to execute the tests as each Node process created by Jest will have it's own sqlite instance and each instance will be populated by the seed values before each test suite.
+
+The SQL conf is located in each file of the [config](config) folder.
+
+Migrations are handled by [Knex migration tool](http://knexjs.org/#Migrations). You can look at the default [todos migration file](migrations/20180327160540_todos.ts) for an example. Migrations are run before each test suite to initialize the sqlite database, and so the database is wiped clean, be careful to never use you production database when running the tests.
+
+## TODO:
+
 - [Sentry] integration (optional)
 - SQL integration with [Knex](http://knexjs.org/)
 - Email/password account creation API routes with email confirmation
 - Password reset via email
 - JWT Authentication
 - Authentication mocking in tests
-
+- CircleCI integration
+- Continous Integration (Docker, Kubernetes)

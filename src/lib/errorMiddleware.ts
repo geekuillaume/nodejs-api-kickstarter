@@ -1,5 +1,6 @@
 import * as Koa from 'koa';
-import { CustomError } from './errors';
+import * as config from 'config';
+import { CustomError, prettyPrintError } from './errors';
 import logger from './log';
 
 const errorMiddleware: Koa.Middleware = async (ctx, next) => {
@@ -24,6 +25,9 @@ const errorMiddleware: Koa.Middleware = async (ctx, next) => {
         status: 500,
         message: 'Unexpected error',
       };
+      if (config.get('prettyPrintErrors')) {
+        prettyPrintError(e);
+      }
     }
   }
 };

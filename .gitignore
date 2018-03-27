@@ -2,3 +2,5 @@ node_modules
 combined.log
 error.log
 coverage
+config/local.js
+db.sqlite

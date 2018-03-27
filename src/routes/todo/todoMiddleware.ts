@@ -1,6 +1,6 @@
 import * as Router from 'koa-router';
 
-import { getTodo } from '../../models/todos';
+import { getTodo } from '../../models/todos/todosModel';
 import { NotFound } from '../../lib/errors';
 
 const todoMiddleware : Router.IParamMiddleware = async (todoId, ctx, next) => {

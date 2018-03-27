@@ -8,7 +8,7 @@ module.exports = {
         "import/no-unresolved": 0, // because typescript already check for it
         "import/extensions": 0,
         "import/prefer-default-export": 0,
-        "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts", "**/testApi.ts"] }],
+        "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts", "**/testApi.ts", '**/*.seed.ts'] }],
         "typescript/no-unused-vars": 2,
     },
     "plugins": [
@@ -17,5 +17,13 @@ module.exports = {
     ],
     "env": {
         "jest/globals": true
+    },
+    overrides: {
+        files: ['**/*.ts'],
+        parser: 'typescript-eslint-parser',
+        rules: {
+            'no-undef': 'off',
+            'no-restricted-globals': 'off'
+        }
     }
 };

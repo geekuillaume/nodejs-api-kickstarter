@@ -1,5 +1,5 @@
 import * as Router from 'koa-router';
-import { listTodos, getTodo } from './todoControllers';
+import { listTodos, getTodo, createTodo } from './todoControllers';
 import { todoMiddleware } from './todoMiddleware';
 
 const todoRouter = new Router();
@@ -10,5 +10,6 @@ todoRouter.param('todoId', todoMiddleware);
 
 todoRouter.get('/', listTodos);
 todoRouter.get('/:todoId', getTodo);
+todoRouter.post('/', createTodo);
 
 export { todoRouter };
