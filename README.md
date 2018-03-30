@@ -1,4 +1,4 @@
-# Opinionated NodeJS API with Koa Boilerplate
+ Opinionated NodeJS API with Koa Boilerplate
 
 This repo contains a basic project based on NodeJS and Koa (and some other libs) implementing a basic API to manage TODOs. Obviously, you're not going to handle just TODOs in all your projet, so all the code is commented to be easily changed and adapted to your needs.
 
@@ -19,6 +19,31 @@ The project packs some useful things for your needs:
 - [Nodemon](https://github.com/remy/nodemon) to auto-reload your server when saving
 - SQL integration with [Knex](http://knexjs.org/)
 
+## Requirements
+
+- NodeJS (tested on v9.10.0): [Installation](https://nodejs.org/en/download/package-manager/)
+- Git
+
+## Starting work
+
+To start working on this project, you need to make a private copy of it:
+
+- Clone it on your computer: `git clone https://github.com/geekuillaume/koa-boilerplate.git`
+- If you are using Github, [create a repository](https://github.com/new) and set the origin in git with `git remote set-url origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME`
+- Change the informations about the code in the [package.json](package.json) file
+- Add and commit the changed `package.json`: `git add package.json` then `git commit`
+- Push the repository content to your new repo with `git push origin master`
+
+## Using the server
+
+The server comes packed with some useful commands (defined in `package.json`):
+
+- `npm run test`: Launch the Jest test suite
+- `npm run test:watch`: Launch the Jest test suite in watch mode (the tests are executed after each file change)
+- `npm run test:coverage`: Launch the Jest test suite and save coverage information in the `coverage` folder
+- `npm run watch`: Start the project in watch mode, restarting it after each file change
+- `npm run lint`: Analyze the project code with ESlint and show coding style errors (executed before each commit)
+
 ## Config
 
 This project uses [node-config](https://github.com/lorenwest/node-config) to handle the different configuration options. I highly recommend you to read this module README to learn about the different ways to configure this project for different environments. The [config/local.js](config/local.js) file should be used for secrets in development.
@@ -31,12 +56,11 @@ The sqlite adapter is primarly used as an in-memory portable database and should
 
 The SQL conf is located in each file of the [config](config) folder.
 
-Migrations are handled by [Knex migration tool](http://knexjs.org/#Migrations). You can look at the default [todos migration file](migrations/20180327160540_todos.ts) for an example. Migrations are run before each test suite to initialize the sqlite database, and so the database is wiped clean, be careful to never use you production database when running the tests.
+Migrations are handled by [Knex migration tool](http://knexjs.org/#Migrations). You can look at the default [todos migration file](migrations/20180327160540_todos.ts) for an example. Migrations are run before each test suite to initialize the sqlite database, and so the database is wiped clean, be careful to never use you production database when running the tests. To create a new migration, use the `npm run db:createMigration -- YOUR_MIGRATION_NAME` command. It will create a new file in the [migrations/](migrations) folder that you should use to define your migration steps. To run all non executed migrations, use the `npm run db:migrate` command.
 
 ## TODO:
 
 - [Sentry] integration (optional)
-- SQL integration with [Knex](http://knexjs.org/)
 - Email/password account creation API routes with email confirmation
 - Password reset via email
 - JWT Authentication

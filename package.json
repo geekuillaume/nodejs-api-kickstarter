@@ -2,6 +2,14 @@
   "name": "koa-boilerplate",
   "version": "1.0.0",
   "description": "A Koa API server boilerplate",
+  "keywords": [
+    "koa",
+    "boilerplate",
+    "api"
+  ],
+  "author": "Guillaume \"geekuillaume\" Besson",
+  "license": "MIT",
+
   "main": "src/index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --verbose",
@@ -14,13 +22,6 @@
     "db:createMigration": "knex migrate:make",
     "db:migrate": "knex migrate:latest"
   },
-  "keywords": [
-    "koa",
-    "boilerplate",
-    "api"
-  ],
-  "author": "Guillaume \"geekuillaume\" Besson",
-  "license": "MIT",
   "dependencies": {
     "bristol": "^0.4.0",
     "config": "^1.30.0",
