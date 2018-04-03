@@ -3,7 +3,7 @@ import * as Knex from 'knex';
 exports.up = async (knex: Knex): Promise<any> => {
   await knex.schema.createTable('user', (table) => {
     table.increments('id');
-    table.text('username').notNullable();
+    table.text('email').notNullable();
     table.boolean('active').defaultTo(false);
 
     table.timestamp('created_at').defaultTo(knex.fn.now());

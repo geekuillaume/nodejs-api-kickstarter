@@ -27,7 +27,7 @@ interface getAuthParams {
   type: AuthType,
   identifier: string,
 }
-const getAuth = async ({ type, identifier }: getAuthParams) => {
+export const getAuth = async ({ type, identifier }: getAuthParams) => {
   const auth: Auth = (await db()
     .select(authFields)
     .from('auth')
@@ -36,4 +36,28 @@ const getAuth = async ({ type, identifier }: getAuthParams) => {
   return auth;
 };
 
-export { getAuth };
+interface createAuthAndUserIfNecessaryParams {
+  type: AuthType;
+  identifier: string;
+  email: string;
+  secret?: string;
+  active?: boolean;
+}
+export const createAuthAndUserIfNecessary = async ({
+  type, identifier, email, secret, active,
+}: createAuthAndUserIfNecessaryParams) => {
+  return db().transaction(async (trx) => {
+    let userId;
+    const [user] = await (trx.select('id').where({ email }).from('user'));
+    if (!user) {
+      [userId] = (await trx.insert({ email, active }).into('user'));
+    } else {
+      userId = user.id;
+    }
+    const [authId] = await trx.insert({
+      type, identifier, secret, active, userId,
+    }).into('auth');
+    const [auth] = await trx.select(authFields).from('auth').where({ id: authId });
+    return auth;
+  });
+};

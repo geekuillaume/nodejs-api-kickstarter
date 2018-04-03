@@ -5,22 +5,38 @@ import { db } from '../db';
 
 export interface User {
   id?: number;
-  username: string;
+  email: string;
   active: boolean;
 }
 
-const userFields = ['id', 'username', 'active'];
+const userFields = ['id', 'email', 'active'];
 
 interface getUserParams {
   id?: number;
-  username?: string;
+  email?: string;
 }
-export const getUser = async ({ id, username }: getUserParams) => {
+export const getUser = async (userInfo: getUserParams) => {
   const user: User = (await db()
     .select(userFields)
     .from('user')
-    .where({ id, username })
+    .where(userInfo)
   )[0];
   return user;
 };
 
+interface createUserParams {
+  email: string;
+  active?: boolean;
+}
+export const createUser = async ({ email, active }: createUserParams) => {
+  const userId: number = (await db()
+    .insert({ email, active: active || false })
+    .into('user'))[0];
+  // we could use the .returning() function here, but because of sqlite
+  // we need to make a query to select the object
+  const user: User = (await db()
+    .select(userFields)
+    .from('user')
+    .where({ id: userId }))[0];
+  return user;
+};

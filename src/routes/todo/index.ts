@@ -1,5 +1,5 @@
 import * as Router from 'koa-router';
-import { listTodos, getTodo, createTodo } from './todoControllers';
+import { listTodosController, getTodoController, createTodoController } from './todoControllers';
 import { todoMiddleware } from './todoMiddleware';
 
 const todoRouter = new Router();
@@ -8,8 +8,8 @@ const todoRouter = new Router();
 // be injected in the ctx when needed
 todoRouter.param('todoId', todoMiddleware);
 
-todoRouter.get('/', listTodos);
-todoRouter.get('/:todoId', getTodo);
-todoRouter.post('/', createTodo);
+todoRouter.get('/', listTodosController);
+todoRouter.get('/:todoId', getTodoController);
+todoRouter.post('/', createTodoController);
 
 export { todoRouter };

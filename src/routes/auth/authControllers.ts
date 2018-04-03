@@ -4,7 +4,7 @@ import { getAuth, AuthType } from '../../models/auth/authModel';
 import { compare } from '../../lib/hash';
 import { createToken } from '../../lib/authToken';
 
-const emailAuth: Koa.Middleware = async (ctx) => {
+const emailAuthController: Koa.Middleware = async (ctx) => {
   BadRequest.assert(typeof ctx.request.body === 'object', 'Body must be an object');
   BadRequest.assert(typeof ctx.request.body.email === 'string', 'Email must be a string');
   BadRequest.assert(typeof ctx.request.body.password === 'string', 'Password must be a string');
@@ -23,4 +23,4 @@ const emailAuth: Koa.Middleware = async (ctx) => {
   };
 };
 
-export { emailAuth };
+export { emailAuthController };
