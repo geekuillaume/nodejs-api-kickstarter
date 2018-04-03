@@ -9,7 +9,6 @@
   ],
   "author": "Guillaume \"geekuillaume\" Besson",
   "license": "MIT",
-
   "main": "src/index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --verbose",
@@ -23,8 +22,10 @@
     "db:migrate": "knex migrate:latest"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "bristol": "^0.4.0",
     "config": "^1.30.0",
+    "jsonwebtoken": "^8.2.0",
     "knex": "^0.14.4",
     "knex-cleaner": "^1.1.4",
     "koa": "^2.5.0",
@@ -35,9 +36,11 @@
     "winston": "^3.0.0-rc3"
   },
   "devDependencies": {
+    "@types/bcrypt": "^1.0.0",
     "@types/config": "0.0.34",
     "@types/faker": "^4.1.2",
     "@types/jest": "^22.2.2",
+    "@types/jsonwebtoken": "^7.2.6",
     "@types/knex": "^0.14.9",
     "@types/koa": "^2.0.44",
     "@types/koa-router": "^7.0.27",

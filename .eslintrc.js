@@ -10,6 +10,7 @@ module.exports = {
         "import/prefer-default-export": 0,
         "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts", "**/testApi.ts", '**/*.seed.ts'] }],
         "typescript/no-unused-vars": 2,
+        "arrow-body-style": 0
     },
     "plugins": [
         "typescript",

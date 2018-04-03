@@ -10,4 +10,9 @@ module.exports = {
       filename: './db.sqlite',
     },
   },
+  hashingRounds: 10,
+  // you should change this by a fixed token that you should generate securely
+  // By default, the secret will always be changed and so the server will not be stateless
+  // But I don't want to provide a fixed secret for people that will forget to change it
+  jwtSecret: require('crypto').randomBytes(48).toString('hex'), // eslint-disable-line
 };
