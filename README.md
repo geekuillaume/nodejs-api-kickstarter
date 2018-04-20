@@ -18,6 +18,9 @@ The project packs some useful things for your needs:
 - [Node-Config](https://github.com/lorenwest/node-config) for configuration and environment variable handling
 - [Nodemon](https://github.com/remy/nodemon) to auto-reload your server when saving
 - SQL integration with [Knex](http://knexjs.org/)
+- Email/password account creation API routes
+- Compatibility to add other OAuth providers as login methods and merge of multiple auth providers for a single account
+- Account email confirmation
 
 ## Requirements
 
@@ -58,6 +61,16 @@ The SQL conf is located in each file of the [config](config) folder.
 
 Migrations are handled by [Knex migration tool](http://knexjs.org/#Migrations). You can look at the default [todos migration file](migrations/20180327160540_todos.ts) for an example. Migrations are run before each test suite to initialize the sqlite database, and so the database is wiped clean, be careful to never use you production database when running the tests. To create a new migration, use the `npm run db:createMigration -- YOUR_MIGRATION_NAME` command. It will create a new file in the [migrations/](migrations) folder that you should use to define your migration steps. To run all non executed migrations, use the `npm run db:migrate` command.
 
+## Email
+
+This project includes a service to send emails to your users. It's used to send the activation link after the account creation and send the "Forgot password" link. In development mode, you can use the [Ethereal.email](https://ethereal.email) service to debug the emails your sending without really having to send them. I've included the instructions about how to create an account in the [config/development.js](config/development.js) file.
+
+The email service uses the [Nodemailer](https://nodemailer.com/about/) module ans is compatible with all SMTP transactionnal email service providers. To get more informations about how you can configure it for you own usage, look at the [documentation](https://nodemailer.com/smtp/).
+
+## Account activation
+
+By default, every account created with an email/password combo is not active. It means that the user is in a read-only mode (you can change this behaviour according to your needs). To activate its account, the user should click the link in the email sent to his email address. This link points to the API that will redirect the user with a `302` to the URL specified in the `activateCallbackUrl` config variable. The auth token will be appended to this `activateCallbackUrl` as a `?auth_token=` query string. For example, if your `activateCallbackUrl` is `https://app.example.com/after_activation`, the user will be redirected to `https://app.example.com/after_activation?auth_token=AUTHENTICATION_TOKEN_FOR_THE_USER`. This token can then be used like a regular authentication token to access other API routes.
+
 ## Troubleshooting
 
 ### I need to reauth after restarting my server
@@ -67,7 +80,6 @@ This is because you didn't change the `jwtSecret` in you config file. Add a `jwt
 ## TODO:
 
 - [Sentry] integration (optional)
-- Email/password account creation API routes with email confirmation
 - Password reset via email
 - JWT Authentication
 - Authentication mocking in tests

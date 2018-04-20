@@ -43,6 +43,9 @@ interface createAuthAndUserIfNecessaryParams {
   secret?: string;
   active?: boolean;
 }
+// This method is used to create a user or to attach a new auth to an existing user
+// for example when a user creates its account with email/password but then
+// use an oauth provider to login
 export const createAuthAndUserIfNecessary = async ({
   type, identifier, email, secret, active,
 }: createAuthAndUserIfNecessaryParams) => {

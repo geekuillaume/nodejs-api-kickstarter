@@ -40,3 +40,11 @@ export const createUser = async ({ email, active }: createUserParams) => {
     .where({ id: userId }))[0];
   return user;
 };
+
+export const activateUser = async ({ id }) => {
+  await db()
+    .table('user')
+    .update({ active: true })
+    .where({ id });
+};
+

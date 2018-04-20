@@ -22,15 +22,18 @@
     "db:migrate": "knex migrate:latest"
   },
   "dependencies": {
+    "@types/handlebars": "^4.0.36",
     "bcrypt": "^1.0.3",
     "bristol": "^0.4.0",
     "config": "^1.30.0",
+    "handlebars": "^4.0.11",
     "jsonwebtoken": "^8.2.0",
     "knex": "^0.14.4",
     "knex-cleaner": "^1.1.4",
     "koa": "^2.5.0",
     "koa-body": "^2.5.0",
     "koa-router": "^7.4.0",
+    "nodemailer": "^4.6.4",
     "pretty-error": "^2.1.1",
     "sqlite3": "^4.0.0",
     "winston": "^3.0.0-rc3"
@@ -44,6 +47,7 @@
     "@types/knex": "^0.14.9",
     "@types/koa": "^2.0.44",
     "@types/koa-router": "^7.0.27",
+    "@types/nodemailer": "^4.6.0",
     "@types/supertest": "^2.0.4",
     "@types/winston": "^2.3.8",
     "eslint": "^4.19.1",
