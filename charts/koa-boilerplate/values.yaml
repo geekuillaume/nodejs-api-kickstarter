@@ -3,8 +3,8 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
-  repository: draft
-  tag: dev
+  repository: 10.102.99.43:5000/jenkinsx/koa-boilerplate
+  tag: 0.0.1
   pullPolicy: IfNotPresent
 service:
   name: koa-boilerplate
