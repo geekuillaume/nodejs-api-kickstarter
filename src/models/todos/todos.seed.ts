@@ -1,5 +1,5 @@
 import * as faker from 'faker';
-import { Todo } from './todosModel';
+import { Todo } from './todoSchema';
 import { db } from '../db';
 
 const getSeededTodos = () => {
@@ -10,6 +10,7 @@ const getSeededTodos = () => {
     id: i,
     name: faker.random.words(2),
     comment: faker.random.words(4),
+    creator_id: Math.floor(i / 10),
   }));
 
   return todos;

@@ -16,6 +16,14 @@ const errorMiddleware: Koa.Middleware = async (ctx, next) => {
         message: e.message,
         details: e.details,
       };
+    } else if (e.isJoi) {
+      ctx.status = 400;
+      ctx.body = {
+        error: true,
+        status: 400,
+        message: 'Validation error',
+        details: e.details,
+      };
     } else {
       // This is an unexpected error
       logger.error('Unexpected error', e);

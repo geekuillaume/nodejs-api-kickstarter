@@ -1,15 +1,18 @@
 import * as Router from 'koa-router';
 import { listTodosController, getTodoController, createTodoController } from './todoControllers';
 import { todoMiddleware } from './todoMiddleware';
+import { requireAuthentified } from '../../lib/authMiddleware';
 
 const todoRouter = new Router();
 
+// Every routes here require a valid user to be authentified
+todoRouter.use(requireAuthentified);
 // We register the todoId param in the router so that it can
 // be injected in the ctx when needed
 todoRouter.param('todoId', todoMiddleware);
 
-todoRouter.get('/', listTodosController);
-todoRouter.get('/:todoId', getTodoController);
-todoRouter.post('/', createTodoController);
+todoRouter.get('/', requireAuthentified, listTodosController);
+todoRouter.get('/:todoId', requireAuthentified, getTodoController);
+todoRouter.post('/', requireAuthentified, createTodoController);
 
 export { todoRouter };

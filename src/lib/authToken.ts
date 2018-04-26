@@ -11,6 +11,13 @@ export const createToken = async (userId: number) => {
   return jwt.sign({ uid: userId }, config.get('jwtSecret'));
 };
 
+// The sync version is used for tests
+// Internally, the jwt.sign is not really asynchronous but we keep the separation between the
+// sync and async version if you want to implement an async token (like a token in db)
+export const createTokenSync = (userId: number) => {
+  return jwt.sign({ uid: userId }, config.get('jwtSecret'));
+};
+
 export const getUserIdFromToken = async (token: string) => {
   let body: any;
   try {

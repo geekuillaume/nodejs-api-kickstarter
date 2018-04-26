@@ -4,11 +4,12 @@ import { seedAuths } from './auth/auth.seed';
 
 const seedDb = async () => {
   await Promise.all([
-    seedTodos(),
     seedUsers(),
     seedAuths(),
     // You should add your seed functions here (and import them above)
   ]);
+  // We seeds the todos afterwards because the users needs to be set before
+  await seedTodos();
 };
 
 export { seedDb };

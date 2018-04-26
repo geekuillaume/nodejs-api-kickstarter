@@ -1,22 +1,25 @@
-import * as Koa from 'koa';
-import { getTodos, createTodo as createTodoInDb } from '../../models/todos/todosModel';
-import { BadRequest } from '../../lib/errors';
+import * as Joi from 'joi';
+import { getTodosOfUser, createTodo as createTodoInDb } from '../../models/todos/todosModel';
+import { todoSchema } from '../../models/todos/todoSchema';
+import { AuthentifiedMiddleware } from '../../lib/authMiddleware';
 
-export const listTodosController : Koa.Middleware = async (ctx) => {
-  const todos = await getTodos();
+export const listTodosController : AuthentifiedMiddleware = async (ctx) => {
+  const todos = await getTodosOfUser(ctx.user.id);
   ctx.body = todos;
 };
 
-export const getTodoController : Koa.Middleware = async (ctx) => {
+export const getTodoController: AuthentifiedMiddleware = async (ctx) => {
   // here, the middleware todoMiddleware defined in ./todoMiddleware.ts
-  // will inject the todo in ctx.todo and will check that the todo exists
+  // will inject the todo in ctx.todo and will check that the todo exists and the user can access it
   ctx.body = ctx.todo;
 };
 
-export const createTodoController : Koa.Middleware = async (ctx) => {
-  BadRequest.assert(typeof ctx.request.body === 'object', 'Body must be an object');
-  BadRequest.assert(typeof ctx.request.body.name === 'string', 'Name must be a string');
-  const todo = await createTodoInDb(ctx.request.body);
+export const createTodoController: AuthentifiedMiddleware = async (ctx) => {
+  const todoBody = Joi.attempt(ctx.request.body, todoSchema);
+  const todo = await createTodoInDb({
+    ...todoBody,
+    creatorId: ctx.user.id,
+  });
   ctx.body = todo;
   ctx.status = 201;
 };
