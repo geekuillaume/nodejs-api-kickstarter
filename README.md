@@ -14,9 +14,9 @@
 </p>
 
 <p align="center">
-  <!-- <a href="https://travis-ci.org/ianstormtaylor/permit">
-    <img src="https://travis-ci.org/ianstormtaylor/permit.svg?branch=master">
-  </a> -->
+  <a href="https://circleci.com/gh/geekuillaume/nodejs-api-kickstarter">
+    <img src="https://img.shields.io/circleci/project/github/geekuillaume/nodejs-api-kickstarter.svg">
+  </a>
   <!-- <a href="./package.json">
     <img src="https://img.shields.io/npm/v/permit.svg?maxAge=300&label=version&colorB=007ec6&maxAge=300">
   </a> -->
