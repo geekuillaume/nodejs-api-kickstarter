@@ -2,6 +2,7 @@ module.exports = {
   port: 5000,
   consoleLoggerEnabled: true,
   prettyPrintErrors: false,
+  loggerLevel: 'info',
   db: {
     // you should probably change this with the database you want to use in production
     // look at ./production.js for more info
@@ -9,6 +10,7 @@ module.exports = {
     connection: {
       filename: './db.sqlite',
     },
+    useNullAsDefault: true,
   },
   hashingRounds: 10,
   // you should change this by a fixed token that you should generate securely

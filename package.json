@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@types/humps": "^1.1.2",
+    "@types/koa-logger": "^3.1.0",
     "@types/uuid": "^3.4.3",
     "bcrypt": "^1.0.3",
     "bristol": "^0.4.0",
@@ -36,6 +37,7 @@
     "koa": "^2.5.0",
     "koa-body": "^2.5.0",
     "koa-compose": "^4.0.0",
+    "koa-logger": "^3.2.0",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.5",
     "nodemailer": "^4.6.4",

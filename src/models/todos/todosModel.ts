@@ -5,7 +5,7 @@ import { todoSchema, Todo } from './todoSchema';
 
 const todoFields = keys(todoSchema.describe().children).map(snakeCase);
 
-const getTodosOfUser = async (userId: number) => {
+const getTodosOfUser = async (userId: string) => {
   const todos: Todo[] = await db().select(todoFields).where({ creator_id: userId }).from('todos');
   // We camelize/decamelize keys from our db because the columns are
   // decamelized and our API is camelized
