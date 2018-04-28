@@ -135,3 +135,5 @@ This is because you didn't change the `jwtSecret` in you config file. Add a `jwt
 - [Sentry] integration (optional)
 - Password reset via email
 - Continous Integration (Docker, Kubernetes)
+- Documentation with OpenAPI and Spectacle
+- Upload coverage and documentation to AWS S3
