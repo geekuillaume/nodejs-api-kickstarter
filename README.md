@@ -76,13 +76,19 @@ The server comes packed with some useful commands (defined in `package.json`):
 
 ## The best developer experience
 
-TODO: add GIFs
 
-- Watch tests
-- Typescript auto-completion
-- CircleCI continuous integration
-- Commit linting
-- Email preview
+### Watch tests
+
+<img src="./misc/watch_tests.gif">
+
+### Email preview
+
+<img src="./misc/email_preview.gif">
+
+### Commit linting
+
+<img src="./misc/precommit_eslint.gif">
+
 
 ## Customizing it
 
