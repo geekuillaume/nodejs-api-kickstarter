@@ -10,7 +10,11 @@
 <p align="center">
   <a href="#whatsinside">What's inside?</a> •
   <a href="#requirements">Requirements</a> •
-  <a href="#usage">Usage</a>
+  <a href="#usage">Usage</a> •
+  <a href="#an-awesome-developer-experience-just-for-you">Developer experience</a> •
+  <a href="#customizing-it">Customizing it</a> •
+  <a href="#troubleshooting">Troubleshooting</a> •
+  <a href="#todo">TODO</a> •
 </p>
 
 <p align="center">
@@ -74,7 +78,7 @@ The server comes packed with some useful commands (defined in `package.json`):
 - `npm run watch`: Start the project in watch mode, restarting it after each file change
 - `npm run lint`: Analyze the project code with ESlint and show coding style errors (executed before each commit)
 
-## The best developer experience
+## An awesome developer experience just for you
 
 
 ### Watch tests
@@ -85,7 +89,7 @@ The server comes packed with some useful commands (defined in `package.json`):
 
 <img src="./misc/email_preview.gif">
 
-### Commit linting
+### Pre-commit linting
 
 <img src="./misc/precommit_eslint.gif">
 
