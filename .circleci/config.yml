@@ -21,4 +21,8 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
+      - run: npm run test:coverage
+      - store_artifacts:
+        path: ~/repo/coverage
+        destination: coverage
 
