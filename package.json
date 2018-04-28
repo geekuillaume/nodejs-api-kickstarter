@@ -1,7 +1,7 @@
 {
-  "name": "koa-boilerplate",
+  "name": "nodejs-api-kickstarter",
   "version": "1.0.0",
-  "description": "A Koa API server boilerplate",
+  "description": "An opinionated NodeJS API Boilerplate focused on extensability and developer productivity.",
   "keywords": [
     "koa",
     "boilerplate",

@@ -1,13 +1,11 @@
-<!-- <p align="center">
-  <a href="#"><img src="./docs/images/banner.png" /></a>
-</p> -->
+<p align="center">
+  <img src="./misc/logo.svg" width="500" />
+</p>
 
 <p align="center">
   An <em>opinionated</em> NodeJS API Boilerplate<br/>
   focused on extensability and developer productivity.
 </p>
-<br/>
-<br/>
 
 <p align="center">
   <a href="#whatsinside">What's inside?</a> •
@@ -23,7 +21,7 @@
     <img src="https://img.shields.io/npm/v/permit.svg?maxAge=300&label=version&colorB=007ec6&maxAge=300">
   </a> -->
   <a href="./LICENSE.md">
-    <img src="https://img.shields.io/github/license/geekuillaume/koa-boilerplate.svg">
+    <img src="https://img.shields.io/github/license/geekuillaume/nodejs-api-kickstarter.svg">
   </a>
 </p>
 
@@ -75,6 +73,16 @@ The server comes packed with some useful commands (defined in `package.json`):
 - `npm run test:coverage`: Launch the Jest test suite and save coverage information in the `coverage` folder
 - `npm run watch`: Start the project in watch mode, restarting it after each file change
 - `npm run lint`: Analyze the project code with ESlint and show coding style errors (executed before each commit)
+
+## The best developer experience
+
+TODO: add GIFs
+
+- Watch tests
+- Typescript auto-completion
+- CircleCI continuous integration
+- Commit linting
+- Email preview
 
 ## Customizing it
 
