@@ -1,5 +1,5 @@
-import { testApi, asUser } from '../../lib/testApi';
-import { resetDb } from '../../lib/testsHelpers';
+import { testApi, asTestUser } from '../../lib/testApi';
+import { resetDb, generateTestUuid } from '../../lib/testsHelpers';
 
 describe('Todo', () => {
   beforeEach(async () => {
@@ -14,7 +14,7 @@ describe('Todo', () => {
     // https://github.com/visionmedia/supertest
     const { body } = await testApi()
       .get('/todo')
-      .use(asUser(0))
+      .use(asTestUser(0))
       .expect(200);
 
     // Here we are using the Jest API
@@ -22,7 +22,6 @@ describe('Todo', () => {
     // https://facebook.github.io/jest/docs/en/expect.html
     expect(body).toHaveLength(10);
     expect(body[0]).toBeInstanceOf(Object);
-    expect(body[0].id).toBe(0);
     // If we throw an Error here, it will be considered as a failure of the test
     // You can write your own code to test the object returned
   });
@@ -40,17 +39,16 @@ describe('Todo', () => {
 
   it('should return a specific todo with its id', async () => {
     const { body } = await testApi()
-      .get('/todo/0')
-      .use(asUser(0))
+      .get(`/todo/${generateTestUuid('todo', 0)}`)
+      .use(asTestUser(0))
       .expect(200);
     expect(body).toBeInstanceOf(Object);
-    expect(body.id).toBe(0);
   });
 
   it('shouldn\'t return a specific todo with its id if the user is not its creator', async () => {
     const { body } = await testApi()
-      .get('/todo/0')
-      .use(asUser(1))
+      .get(`/todo/${generateTestUuid('todo', 0)}`)
+      .use(asTestUser(1))
       .expect(401);
     expect(body).toBeInstanceOf(Object);
     expect(body.status).toBe(401);
@@ -60,7 +58,7 @@ describe('Todo', () => {
   it('should return an error when there is no todo with this id', async () => {
     const { body } = await testApi()
       .get('/todo/4242')
-      .use(asUser(0))
+      .use(asTestUser(0))
       .expect(404);
     expect(body).toBeInstanceOf(Object);
     expect(body.status).toBe(404);
@@ -70,7 +68,7 @@ describe('Todo', () => {
   it('should return an error when the id is incorrect', async () => {
     const { body } = await testApi()
       .get('/todo/sqdkqjhi')
-      .use(asUser(0))
+      .use(asTestUser(0))
       .expect(404);
     expect(body).toBeInstanceOf(Object);
     expect(body.status).toBe(404);
@@ -95,24 +93,20 @@ describe('Todo', () => {
   it('should create a todo', async () => {
     const { body } = await testApi()
       .post('/todo')
-      .use(asUser(0))
+      .use(asTestUser(0))
       .send({
         name: 'Test TODO',
         comment: 'Test comment',
       })
       .expect(201);
-    expect(body).toEqual({
-      id: 30,
-      name: 'Test TODO',
-      comment: 'Test comment',
-      creatorId: 0,
-    });
+    expect(body).toHaveProperty('name', 'Test TODO');
+    expect(body).toHaveProperty('comment', 'Test comment');
   });
 
   it('should not create a todo without a name', async () => {
     const { body } = await testApi()
       .post('/todo')
-      .use(asUser(0))
+      .use(asTestUser(0))
       .send({
         comment: 'Test comment',
       })
@@ -125,16 +119,11 @@ describe('Todo', () => {
   it('should create a todo without a comment', async () => {
     const { body } = await testApi()
       .post('/todo')
-      .use(asUser(0))
+      .use(asTestUser(0))
       .send({
         name: 'Test TODO',
       })
       .expect(201);
-    expect(body).toEqual({
-      id: 30,
-      name: 'Test TODO',
-      comment: null,
-      creatorId: 0,
-    });
+    expect(body).toHaveProperty('name', 'Test TODO');
   });
 });

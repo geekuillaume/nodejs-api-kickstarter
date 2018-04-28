@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@types/humps": "^1.1.2",
+    "@types/uuid": "^3.4.3",
     "bcrypt": "^1.0.3",
     "bristol": "^0.4.0",
     "config": "^1.30.0",
@@ -40,6 +41,7 @@
     "nodemailer": "^4.6.4",
     "pretty-error": "^2.1.1",
     "sqlite3": "^4.0.0",
+    "uuid": "^3.2.1",
     "winston": "^3.0.0-rc3"
   },
   "devDependencies": {

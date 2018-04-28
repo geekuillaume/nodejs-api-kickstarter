@@ -4,7 +4,7 @@ import { db } from '../db';
 // of the auth methods of this user
 
 export interface User {
-  id?: number;
+  id?: string;
   email: string;
   active: boolean;
 }
@@ -12,7 +12,7 @@ export interface User {
 const userFields = ['id', 'email', 'active'];
 
 interface getUserParams {
-  id?: number;
+  id?: string;
   email?: string;
 }
 export const getUser = async (userInfo: getUserParams) => {

@@ -18,10 +18,10 @@ const getTodo = async (id) => {
 };
 
 const createTodo = async (body: Todo) => {
-  const todoId: number = (await db().insert(decamelizeKeys(body)).into('todos'))[0];
+  await db().insert(decamelizeKeys(body)).into('todos');
   // we could use the .returning() function here, but because of sqlite
   // we need to make a query to select the object
-  const todo: Todo = (await db().select(todoFields).from('todos').where({ id: todoId }))[0];
+  const todo: Todo = await db().first(todoFields).from('todos').where({ id: body.id });
   return camelizeKeys(todo);
 };
 

@@ -1,17 +1,18 @@
 import * as joi from 'joi';
 
 export const todoSchema = joi.object().keys({
-  id: joi.number(),
+  id: joi.string().uuid().strip(),
   name: joi.string().min(1).trim().required(),
   comment: joi.string().trim(),
-  creatorId: joi.number(),
+  // we are stripping this because only the backend should handle the creator of a todo
+  creatorId: joi.string().uuid().strip(),
 });
 
 // We already defined the model above, we could improve this
 export interface Todo {
-  id?: number;
+  id?: string;
   name: string;
   comment: string;
-  creatorId?: number;
+  creatorId?: string;
 }
 

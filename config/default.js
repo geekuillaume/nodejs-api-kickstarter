@@ -17,4 +17,5 @@ module.exports = {
   jwtSecret: require('crypto').randomBytes(48).toString('hex'), // eslint-disable-line
   apiAddress: 'https://api.example.com', // replace this with the address where your api is hosted
   activateCallbackUrl: 'https://app.exmaple.com/after_activation', // new users will be redirected to this address after activating their account
+  uuidTestNamespace: 'e50b0ca8-d1e4-40cd-f10f-a49e8b7cc4de', // this is used to create deterministic uuid for our tests
 };

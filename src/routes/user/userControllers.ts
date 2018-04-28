@@ -1,6 +1,6 @@
 import * as Koa from 'koa';
 import * as config from 'config';
-import { BadRequest } from '../../lib/errors';
+import { BadRequest, NotFound } from '../../lib/errors';
 import { hash } from '../../lib/hash';
 import { AuthType, createAuthAndUserIfNecessary } from '../../models/auth/authModel';
 import { getUser, activateUser } from '../../models/user/userModel';
@@ -41,6 +41,7 @@ export const activateUserController: Koa.Middleware = async (ctx) => {
   BadRequest.assert(typeof ctx.request.query.token === 'string', 'token in query string must be a string');
   const userId = await getUserIdFromActivationToken(ctx.request.query.token);
   const user = await getUser({ id: userId });
+  NotFound.assert(user, 'Unknown user');
   BadRequest.assert(!user.active, 'User is already active');
   await activateUser({ id: userId });
   ctx.redirect(`${config.get('activateCallbackUrl')}?auth_token=${await createToken(user.id)}`);

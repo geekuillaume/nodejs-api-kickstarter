@@ -110,6 +110,10 @@ The email service uses the [Nodemailer](https://nodemailer.com/about/) module an
 
 By default, every account created with an email/password combo is not active. It means that the user is in a read-only mode (you can change this behaviour according to your needs). To activate its account, the user should click the link in the email sent to his email address. This link points to the API that will redirect the user with a `302` to the URL specified in the `activateCallbackUrl` config variable. The auth token will be appended to this `activateCallbackUrl` as a `?auth_token=` query string. For example, if your `activateCallbackUrl` is `https://app.example.com/after_activation`, the user will be redirected to `https://app.example.com/after_activation?auth_token=AUTHENTICATION_TOKEN_FOR_THE_USER`. This token can then be used like a regular authentication token to access other API routes.
 
+### UUID
+
+Everywhere in this project, UUIDs are used instead of the classic auto-incremental integers IDs. This way you don't expose the number of elements in your db (like the number of users of your API). It can also help prevent bugs in your code as you cannot guess the id of a specific object and so cannot directly target it.
+
 ## Troubleshooting
 
 ### I need to reauth after restarting my server

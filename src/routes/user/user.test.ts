@@ -1,5 +1,5 @@
 import { testApi } from '../../lib/testApi';
-import { resetDb } from '../../lib/testsHelpers';
+import { resetDb, generateTestUuid } from '../../lib/testsHelpers';
 import { sendEmail } from '../../lib/email';
 import { createActivationToken } from '../../lib/authToken';
 
@@ -34,7 +34,7 @@ describe('User', () => {
     await testApi()
       .get('/user/activate')
       .query({
-        token: await createActivationToken(16),
+        token: await createActivationToken(generateTestUuid('user', 16)),
       })
       .expect(302);
   });
@@ -43,7 +43,7 @@ describe('User', () => {
     await testApi()
       .get('/user/activate')
       .query({
-        token: await createActivationToken(1),
+        token: await createActivationToken(generateTestUuid('user', 1)),
       })
       .expect(400);
   });

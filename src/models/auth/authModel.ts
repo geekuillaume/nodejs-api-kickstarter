@@ -1,3 +1,4 @@
+import * as uuidv4 from 'uuid/v4';
 import { db } from '../db';
 
 // The auth object is separated from the profile object in the db
@@ -10,8 +11,8 @@ export enum AuthType {
 }
 
 export interface Auth {
-  id?: number;
-  userId: number;
+  id?: string;
+  userId: string;
   type: AuthType; // Can only be email for the moment
   // For email type, the identifier is the email address but if we implement Facebook
   // it will be the facebook id
@@ -28,11 +29,10 @@ interface getAuthParams {
   identifier: string,
 }
 export const getAuth = async ({ type, identifier }: getAuthParams) => {
-  const auth: Auth = (await db()
-    .select(authFields)
+  const auth: Auth = await db()
+    .first(authFields)
     .from('auth')
-    .where({ type, identifier })
-  )[0];
+    .where({ type, identifier });
   return auth;
 };
 
@@ -53,14 +53,16 @@ export const createAuthAndUserIfNecessary = async ({
     let userId;
     const [user] = await (trx.select('id').where({ email }).from('user'));
     if (!user) {
-      [userId] = (await trx.insert({ email, active }).into('user'));
+      userId = uuidv4();
+      await trx.insert({ id: userId, email, active }).into('user');
     } else {
       userId = user.id;
     }
-    const [authId] = await trx.insert({
-      type, identifier, secret, active, userId,
+    const authId = uuidv4();
+    await trx.insert({
+      id: authId, type, identifier, secret, active, userId,
     }).into('auth');
-    const [auth] = await trx.select(authFields).from('auth').where({ id: authId });
+    const auth = await trx.first(authFields).from('auth').where({ id: authId });
     return auth;
   });
 };
