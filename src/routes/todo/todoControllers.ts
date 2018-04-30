@@ -1,7 +1,7 @@
 import * as Joi from 'joi';
 import * as uuidv4 from 'uuid/v4';
 import { getTodosOfUser, createTodo as createTodoInDb } from '../../models/todos/todosModel';
-import { todoSchema } from '../../models/todos/todoSchema';
+import { todoInputSchema } from '../../models/todos/todoSchema';
 import { AuthentifiedMiddleware } from '../../lib/authMiddleware';
 
 export const listTodosController : AuthentifiedMiddleware = async (ctx) => {
@@ -16,8 +16,7 @@ export const getTodoController: AuthentifiedMiddleware = async (ctx) => {
 };
 
 export const createTodoController: AuthentifiedMiddleware = async (ctx) => {
-  const todoBody = Joi.attempt(ctx.request.body, todoSchema);
-  // TODO: test that creatorId and id are not defined in body
+  const todoBody = Joi.attempt(ctx.request.body, todoInputSchema);
   const todo = await createTodoInDb({
     ...todoBody,
     creatorId: ctx.user.id,

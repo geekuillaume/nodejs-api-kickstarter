@@ -127,7 +127,7 @@ describe('Todo', () => {
     expect(body).toHaveProperty('name', 'Test TODO');
   });
 
-  it('should not create a todo when an id is passed', async () => {
+  it('should create a todo when an id is passed but ignore it', async () => {
     const { body } = await testApi()
       .post('/todo')
       .use(asTestUser(0))
@@ -135,12 +135,12 @@ describe('Todo', () => {
         id: 'test',
         name: 'Test TODO',
       })
-      .expect(400);
+      .expect(201);
 
-    expect(body).toHaveProperty('message', 'Validation error');
+    expect(body.id).not.toBe('test');
   });
 
-  it('should not create a todo when an id is passed and is a GUID', async () => {
+  it('should create a todo when an id is passed and is a GUID but ignore it', async () => {
     const { body } = await testApi()
       .post('/todo')
       .use(asTestUser(0))
@@ -148,12 +148,12 @@ describe('Todo', () => {
         id: 'a87b16f3-597d-405c-a82a-795615be5b5d',
         name: 'Test TODO',
       })
-      .expect(400);
+      .expect(201);
 
-    expect(body).toHaveProperty('message', 'Validation error');
+    expect(body.id).not.toBe('a87b16f3-597d-405c-a82a-795615be5b5d');
   });
 
-  it('should not create a todo when a creatorId is passed and is a GUID', async () => {
+  it('should create a todo when a creatorId is passed and is a GUID but ignore it', async () => {
     const { body } = await testApi()
       .post('/todo')
       .use(asTestUser(0))
@@ -161,8 +161,8 @@ describe('Todo', () => {
         creatorId: 'a87b16f3-597d-405c-a82a-795615be5b5d',
         name: 'Test TODO',
       })
-      .expect(400);
+      .expect(201);
 
-    expect(body).toHaveProperty('message', 'Validation error');
+    expect(body.creatorId).not.toBe('a87b16f3-597d-405c-a82a-795615be5b5d');
   });
 });
