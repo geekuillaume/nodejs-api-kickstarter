@@ -8,7 +8,7 @@ module.exports = {
         "import/no-unresolved": 0, // because typescript already check for it
         "import/extensions": 0,
         "import/prefer-default-export": 0,
-        "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts", "**/testApi.ts", '**/*.seed.ts'] }],
+        "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts", "**/testApi.ts", '**/*.seed.ts', 'misc/**/*.ts'] }],
         "typescript/no-unused-vars": 2,
         "arrow-body-style": 0
     },

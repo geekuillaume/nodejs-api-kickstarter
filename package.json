@@ -19,7 +19,8 @@
     "lint": "eslint src/**/*.ts",
     "lint-staged": "lint-staged",
     "db:createMigration": "knex migrate:make",
-    "db:migrate": "knex migrate:latest"
+    "db:migrate": "knex migrate:latest",
+    "doc:generate": "ts-node ./misc/internals/docGenerator.ts"
   },
   "dependencies": {
     "@types/humps": "^1.1.2",
@@ -67,11 +68,15 @@
     "eslint-plugin-jest": "^21.15.0",
     "eslint-plugin-typescript": "^0.12.0",
     "faker": "^4.1.0",
+    "glob": "^7.1.2",
     "husky": "^0.15.0-rc.13",
     "jest": "^22.4.3",
+    "joi-to-swagger": "^2.0.0",
     "lint-staged": "^7.0.0",
     "nodemon": "^1.17.2",
+    "spectacle-docs": "^1.0.3",
     "supertest": "^3.0.0",
+    "swagger-jsdoc": "^1.9.7",
     "ts-jest": "^22.4.2",
     "ts-node": "^5.0.1",
     "typescript": "^2.7.2",
