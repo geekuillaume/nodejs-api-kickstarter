@@ -126,4 +126,43 @@ describe('Todo', () => {
       .expect(201);
     expect(body).toHaveProperty('name', 'Test TODO');
   });
+
+  it('should not create a todo when an id is passed', async () => {
+    const { body } = await testApi()
+      .post('/todo')
+      .use(asTestUser(0))
+      .send({
+        id: 'test',
+        name: 'Test TODO',
+      })
+      .expect(400);
+
+    expect(body).toHaveProperty('message', 'Validation error');
+  });
+
+  it('should not create a todo when an id is passed and is a GUID', async () => {
+    const { body } = await testApi()
+      .post('/todo')
+      .use(asTestUser(0))
+      .send({
+        id: 'a87b16f3-597d-405c-a82a-795615be5b5d',
+        name: 'Test TODO',
+      })
+      .expect(400);
+
+    expect(body).toHaveProperty('message', 'Validation error');
+  });
+
+  it('should not create a todo when a creatorId is passed and is a GUID', async () => {
+    const { body } = await testApi()
+      .post('/todo')
+      .use(asTestUser(0))
+      .send({
+        creatorId: 'a87b16f3-597d-405c-a82a-795615be5b5d',
+        name: 'Test TODO',
+      })
+      .expect(400);
+
+    expect(body).toHaveProperty('message', 'Validation error');
+  });
 });

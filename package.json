@@ -12,7 +12,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --verbose",
-    "test:watch": "NODE_ENV=test jest --watch --verbose",
+    "test:watch": "NODE_ENV=test jest --watch --verbose -i",
     "test:coverage": "NODE_ENV=test jest --coverage",
     "watch": "nodemon --watch 'src/**/*' -e ts,tsx --exec 'ts-node' ./src/index.ts",
     "start": "ts-node ./src/index.ts",
