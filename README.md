@@ -77,6 +77,7 @@ The server comes packed with some useful commands (defined in `package.json`):
 - `npm run test:coverage`: Launch the Jest test suite and save coverage information in the `coverage` folder
 - `npm run watch`: Start the project in watch mode, restarting it after each file change
 - `npm run lint`: Analyze the project code with ESlint and show coding style errors (executed before each commit)
+- `npm run doc:generate`: Generate the documentation in the `apiDoc` folder
 
 ## An awesome developer experience just for you
 
@@ -124,6 +125,12 @@ By default, every account created with an email/password combo is not active. It
 
 Everywhere in this project, UUIDs are used instead of the classic auto-incremental integers IDs. This way you don't expose the number of elements in your db (like the number of users of your API). It can also help prevent bugs in your code as you cannot guess the id of a specific object and so cannot directly target it.
 
+### Documentation
+
+The `npm run doc:generate` command can be used to execute the script to generate the documentation in the `apiDoc` folder. Here's an example of the resulting documentation: [ApiDoc](https://rawgit.com/geekuillaume/nodejs-api-kickstarter/master/apiDoc/index.html).
+
+You should look at the dedicated [README](misc/internals/docsComponents/README.md) for more information.
+
 ## Troubleshooting
 
 ### I need to reauth after restarting my server
@@ -135,5 +142,4 @@ This is because you didn't change the `jwtSecret` in you config file. Add a `jwt
 - [Sentry] integration (optional)
 - Password reset via email
 - Continous Integration (Docker, Kubernetes)
-- Documentation with OpenAPI and Spectacle
 - Upload coverage and documentation to AWS S3

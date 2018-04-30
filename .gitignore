@@ -4,4 +4,3 @@ error.log
 coverage
 config/local.js
 db.sqlite
-apiDoc
