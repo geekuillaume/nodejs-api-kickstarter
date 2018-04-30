@@ -21,5 +21,5 @@ const getSeededAuths = async () => {
 };
 
 export const seedAuths = async () => {
-  await db().insert(await getSeededAuths()).into('auth');
+  await db().insert(await getSeededAuths()).into('auths');
 };

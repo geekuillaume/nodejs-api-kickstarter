@@ -31,7 +31,7 @@ interface getAuthParams {
 export const getAuth = async ({ type, identifier }: getAuthParams) => {
   const auth: Auth = await db()
     .first(authFields)
-    .from('auth')
+    .from('auths')
     .where({ type, identifier });
   return auth;
 };
@@ -51,18 +51,18 @@ export const createAuthAndUserIfNecessary = async ({
 }: createAuthAndUserIfNecessaryParams) => {
   return db().transaction(async (trx) => {
     let userId;
-    const [user] = await (trx.select('id').where({ email }).from('user'));
+    const [user] = await (trx.select('id').where({ email }).from('users'));
     if (!user) {
       userId = uuidv4();
-      await trx.insert({ id: userId, email, active }).into('user');
+      await trx.insert({ id: userId, email, active }).into('users');
     } else {
       userId = user.id;
     }
     const authId = uuidv4();
     await trx.insert({
       id: authId, type, identifier, secret, active, userId,
-    }).into('auth');
-    const auth = await trx.first(authFields).from('auth').where({ id: authId });
+    }).into('auths');
+    const auth = await trx.first(authFields).from('auths').where({ id: authId });
     return auth;
   });
 };

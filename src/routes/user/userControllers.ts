@@ -1,5 +1,6 @@
 import * as Koa from 'koa';
 import * as config from 'config';
+import * as Joi from 'joi';
 import { BadRequest, NotFound } from '../../lib/errors';
 import { hash } from '../../lib/hash';
 import { AuthType, createAuthAndUserIfNecessary } from '../../models/auth/authModel';
@@ -7,17 +8,16 @@ import { getUser, activateUser } from '../../models/user/userModel';
 import { createToken, createActivationToken, getUserIdFromActivationToken } from '../../lib/authToken';
 import { sendEmail } from '../../lib/email';
 import { accountActivationTemplate } from '../../misc/emailTemplates/accountActivation';
+import { emailAuthInputSchema } from '../../models/auth/authSchema';
 
 export const createUserController: Koa.Middleware = async (ctx) => {
-  BadRequest.assert(typeof ctx.request.body === 'object', 'Body must be an object');
-  BadRequest.assert(typeof ctx.request.body.email === 'string', 'email must be a string');
-  BadRequest.assert(typeof ctx.request.body.password === 'string', 'password must be a string');
+  const emailAuthBody = Joi.attempt(ctx.request.body, emailAuthInputSchema);
 
   const auth = await createAuthAndUserIfNecessary({
     type: AuthType.email,
-    email: ctx.request.body.email,
-    secret: await hash(ctx.request.body.password),
-    identifier: ctx.request.body.email,
+    email: emailAuthBody.email,
+    secret: await hash(emailAuthBody.password),
+    identifier: emailAuthBody.email,
   });
   const user = await getUser({ id: auth.userId });
   const activationToken = await createActivationToken(auth.userId);

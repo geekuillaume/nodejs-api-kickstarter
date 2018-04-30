@@ -24,6 +24,15 @@ const errorMiddleware: Koa.Middleware = async (ctx, next) => {
         message: 'Validation error',
         details: e.details,
       };
+    // these are the error codes for sqlite and postgresql for a conflict
+    // there is no general API for these so if you need another db, you should take cade of this
+    } else if (e.code === 'SQLITE_CONSTRAINT' || e.code === '23505') {
+      ctx.status = 409;
+      ctx.body = {
+        error: true,
+        status: 409,
+        message: 'Conflict',
+      };
     } else {
       // This is an unexpected error
       logger.error('Unexpected error', e);

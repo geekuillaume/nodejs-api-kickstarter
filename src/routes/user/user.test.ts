@@ -56,4 +56,40 @@ describe('User', () => {
       })
       .expect(401);
   });
+
+  it('should not create a user with the same email address', async () => {
+    const { body } = await testApi()
+      .post('/user')
+      .send({
+        email: 'test1@test.com',
+        password: 'test',
+      })
+      .expect(409);
+
+    expect(body).toHaveProperty('message', 'Conflict');
+  });
+
+  it('should not create a user with the same email address but with different casing', async () => {
+    const { body } = await testApi()
+      .post('/user')
+      .send({
+        email: 'TEsT1@test.com',
+        password: 'test',
+      })
+      .expect(409);
+
+    expect(body).toHaveProperty('message', 'Conflict');
+  });
+
+  it('should not create a user with an invalid email address', async () => {
+    const { body } = await testApi()
+      .post('/user')
+      .send({
+        email: 'this is not an email address',
+        password: 'test',
+      })
+      .expect(400);
+
+    expect(body).toHaveProperty('message', 'Validation error');
+  });
 });

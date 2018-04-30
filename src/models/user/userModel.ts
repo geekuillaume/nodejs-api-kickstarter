@@ -18,7 +18,7 @@ interface getUserParams {
 export const getUser = async (userInfo: getUserParams) => {
   const user: User = (await db()
     .select(userFields)
-    .from('user')
+    .from('users')
     .where(userInfo)
   )[0];
   return user;
@@ -31,19 +31,19 @@ interface createUserParams {
 export const createUser = async ({ email, active }: createUserParams) => {
   const userId: number = (await db()
     .insert({ email, active: active || false })
-    .into('user'))[0];
+    .into('users'))[0];
   // we could use the .returning() function here, but because of sqlite
   // we need to make a query to select the object
   const user: User = (await db()
     .select(userFields)
-    .from('user')
+    .from('users')
     .where({ id: userId }))[0];
   return user;
 };
 
 export const activateUser = async ({ id }) => {
   await db()
-    .table('user')
+    .table('users')
     .update({ active: true })
     .where({ id });
 };

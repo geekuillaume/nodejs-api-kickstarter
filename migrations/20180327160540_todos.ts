@@ -6,7 +6,7 @@ exports.up = (knex: Knex) => knex.schema.createTable('todos', (table) => {
   table.text('comment');
   table.timestamp('created_at').defaultTo(knex.fn.now());
   table.uuid('creator_id').notNullable();
-  table.foreign('creator_id').references('user.id');
+  table.foreign('creator_id').references('users.id');
 });
 
 exports.down = (knex: Knex) => knex.schema.dropTable('todos');

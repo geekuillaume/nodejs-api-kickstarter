@@ -42,6 +42,7 @@
     "koa-router": "^7.4.0",
     "lodash": "^4.17.5",
     "nodemailer": "^4.6.4",
+    "pg": "^7.4.1",
     "pretty-error": "^2.1.1",
     "sqlite3": "^4.0.0",
     "uuid": "^3.2.1",

@@ -26,7 +26,7 @@ describe('Auth', () => {
     const { body } = await testApi()
       .post('/auth/email')
       .send({
-        email: 'unknown',
+        email: 'unknown@test.com',
         password: 'test',
       })
       .expect(404);
@@ -57,7 +57,7 @@ describe('Auth', () => {
       .expect(400);
 
     expect(body).toBeInstanceOf(Object);
-    expect(body.message).toBe('Email must be a string');
+    expect(body.message).toBe('Validation error');
   });
 
   it('should return a 400 when password is not specified', async () => {
@@ -69,6 +69,6 @@ describe('Auth', () => {
       .expect(400);
 
     expect(body).toBeInstanceOf(Object);
-    expect(body.message).toBe('Password must be a string');
+    expect(body.message).toBe('Validation error');
   });
 });

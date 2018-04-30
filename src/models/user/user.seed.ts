@@ -13,5 +13,5 @@ const getSeededUsers = () => {
 };
 
 export const seedUsers = async () => {
-  await db().insert(getSeededUsers()).into('user');
+  await db().insert(getSeededUsers()).into('users');
 };

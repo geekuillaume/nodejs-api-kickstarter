@@ -19,4 +19,13 @@ module.exports = {
       },
     },
   },
+  // db: {
+  //   client: 'pg',
+  //   connection: {
+  //     host: '127.0.0.1',
+  //     database: 'boilerplate',
+  //     user: 'boilerplate',
+  //     password: 'boilerplate',
+  //   },
+  // },
 };

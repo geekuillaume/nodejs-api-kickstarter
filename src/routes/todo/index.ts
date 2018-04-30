@@ -15,7 +15,11 @@ todoRouter.param('todoId', todoMiddleware);
    * @swagger
    * /todo:
    *   get:
+   *     tags:
+   *       - Todo
    *     description: Returns TODO of authenticated user
+   *     security:
+   *      - Bearer: []
    *     produces:
    *      - application/json
    *     responses:
@@ -27,11 +31,16 @@ todoRouter.param('todoId', todoMiddleware);
    *             $ref: '#/definitions/todo'
    */
 todoRouter.get('/', requireAuthentified, listTodosController);
+
 /**
    * @swagger
    * /todo/{todoId}:
    *   get:
+   *     tags:
+   *       - Todo
    *     description: Get a single TODO
+   *     security:
+   *      - Bearer: []
    *     parameters:
    *       - name: todoId
    *         description: Todo ID
@@ -49,11 +58,16 @@ todoRouter.get('/', requireAuthentified, listTodosController);
    *           $ref: '#/definitions/todo'
    */
 todoRouter.get('/:todoId', requireAuthentified, getTodoController);
+
 /**
    * @swagger
    * /todo:
    *   post:
+   *     tags:
+   *       - Todo
    *     description: Create a TODO
+   *     security:
+   *      - Bearer: []
    *     parameters:
    *       - name: todo
    *         description: Todo object
