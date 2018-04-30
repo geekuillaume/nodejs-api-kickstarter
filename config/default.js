@@ -20,8 +20,4 @@ module.exports = {
   apiAddress: 'https://api.example.com', // replace this with the address where your api is hosted
   activateCallbackUrl: 'https://app.exmaple.com/after_activation', // new users will be redirected to this address after activating their account
   uuidTestNamespace: 'e50b0ca8-d1e4-40cd-f10f-a49e8b7cc4de', // this is used to create deterministic uuid for our tests
-  docInfo: { // fields are from OpenAPI: https://swagger.io/specification/#infoObject
-    title: 'NodeJS API Kickstarter',
-    description: 'An *opinionated* NodeJS API Boilerplate focused on extensability and developer productivity.',
-  },
 };
