@@ -22,7 +22,11 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
       - run: npm run test:coverage
+      - run: npm run doc:generate
       - store_artifacts:
           path: ~/repo/coverage
           destination: coverage
+      - store_artifacts:
+          path: ~/repo/apiDoc
+          destination: apiDoc
 
