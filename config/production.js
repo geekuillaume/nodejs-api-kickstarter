@@ -1,5 +1,5 @@
 module.exports = {
-  consoleLoggerEnabled: false,
+  consoleLoggerEnabled: true,
   db: {
     // Change this with the correct implementation for your db
     // Example: if you use PostgreSQL, install pg with "npm install --save pg" and uncomment this

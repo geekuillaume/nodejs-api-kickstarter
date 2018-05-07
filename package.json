@@ -46,7 +46,12 @@
     "pretty-error": "^2.1.1",
     "sqlite3": "^4.0.0",
     "uuid": "^3.2.1",
-    "winston": "^3.0.0-rc3"
+    "winston": "^3.0.0-rc3",
+    "ts-node": "^5.0.1",
+    "faker": "^4.1.0",
+    "glob": "^7.1.2",
+    "husky": "^0.15.0-rc.13",
+    "typescript": "^2.7.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^1.0.0",
@@ -68,9 +73,6 @@
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jest": "^21.15.0",
     "eslint-plugin-typescript": "^0.12.0",
-    "faker": "^4.1.0",
-    "glob": "^7.1.2",
-    "husky": "^0.15.0-rc.13",
     "jest": "^22.4.3",
     "joi-to-swagger": "^2.0.0",
     "lint-staged": "^7.0.0",
@@ -79,8 +81,6 @@
     "supertest": "^3.0.0",
     "swagger-jsdoc": "^1.9.7",
     "ts-jest": "^22.4.2",
-    "ts-node": "^5.0.1",
-    "typescript": "^2.7.2",
     "typescript-eslint-parser": "^15.0.0"
   },
   "jest": {
