@@ -1,0 +1,67 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "nodejs-api-boilerplate.fullname" . }}
+  labels:
+    app: {{ template "nodejs-api-boilerplate.name" . }}
+    chart: {{ template "nodejs-api-boilerplate.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "nodejs-api-boilerplate.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "nodejs-api-boilerplate.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ template "nodejs-api-boilerplate.fullname" . }}-registry
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.imageCredentials.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          env:
+          - name: DB_HOST
+            value: {{ template "postgresql.fullname" . }}
+          - name: DB_USER
+            value: {{ default "api" .Values.postgresUser | quote }}
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "postgresql.fullname" . }}
+                key: postgres-password
+          - name: DB_NAME
+            value: {{ default "api" .Values.postgresDatabase | quote }}
+          - name: DB_CLIENT
+            value: "pg"
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

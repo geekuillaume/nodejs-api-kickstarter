@@ -131,6 +131,20 @@ The `npm run doc:generate` command can be used to execute the script to generate
 
 You should look at the dedicated [README](misc/internals/docsComponents/README.md) for more information.
 
+## Kuberenetes Deploiement
+
+TODO:
+- write a real documentation here
+- add info in NOTES.txt
+- talk about autoMigrate
+- explain how to change name
+
+Rancher
+Docker registry
+Cert-manager
+`helm dependency update`
+`helm upgrade --install nodejsapi ./helm --namespace nodejsapi`
+
 ## Troubleshooting
 
 ### I need to reauth after restarting my server

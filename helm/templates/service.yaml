@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "nodejs-api-boilerplate.fullname" . }}
+  labels:
+    app: {{ template "nodejs-api-boilerplate.name" . }}
+    chart: {{ template "nodejs-api-boilerplate.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "nodejs-api-boilerplate.name" . }}
+    release: {{ .Release.Name }}

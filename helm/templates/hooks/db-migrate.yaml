@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-db-migrate"
+  labels:
+    app: {{ template "nodejs-api-boilerplate.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    "helm.sh/hook": post-install{{ if .Values.autoMigrate }},post-upgrade{{end}}
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}-db-migrate"
+      labels:
+        app: {{ template "nodejs-api-boilerplate.fullname" . }}
+        release: "{{ .Release.Name }}"
+    spec:
+      imagePullSecrets:
+        - name: {{ template "nodejs-api-boilerplate.fullname" . }}-registry
+      restartPolicy: Never
+      containers:
+      - name: db-migrate-job
+        image: "{{ .Values.imageCredentials.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command: ["npm","run","db:migrate"]
+        env:
+        - name: DB_HOST
+          value: {{ template "postgresql.fullname" . }}
+        - name: DB_USER
+          value: {{ default "api" .Values.postgresUser | quote }}
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "postgresql.fullname" . }}
+              key: postgres-password
+        - name: DB_NAME
+          value: {{ default "api" .Values.postgresDatabase | quote }}
+        - name: DB_CLIENT
+          value: "pg"

@@ -1,6 +1,7 @@
 module.exports = {
   port: 'PORT',
   db: {
+    client: 'DB_CLIENT',
     connection: {
       host: 'DB_HOST',
       user: 'DB_USER',

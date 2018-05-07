@@ -1,0 +1,28 @@
+{{- $fullName := include "nodejs-api-boilerplate.fullname" . -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ template "nodejs-api-boilerplate.name" . }}
+    chart: {{ template "nodejs-api-boilerplate.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    certmanager.k8s.io/cluster-issuer: {{ .Values.exposing.clusterIssuerName }}
+spec:
+  tls:
+    - hosts:
+      {{- range .Values.exposing.hosts }}
+        - {{ . }}
+      {{- end }}
+      secretName: {{ .Release.Name }}-tls
+  rules:
+  {{- range .Values.exposing.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ $fullName }}
+              servicePort: http
+  {{- end }}

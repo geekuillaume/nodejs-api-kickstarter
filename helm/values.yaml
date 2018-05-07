@@ -1,0 +1,40 @@
+replicaCount: 1
+
+# Launch npm run db:migrate on helm upgrade
+autoMigrate: true
+
+image:
+  # replace this name with the name of your docker image you pushed to the registry
+  repository: geekuillaume/nodejs-api-boilerplate
+  tag: latest
+
+exposing:
+  # replace this with your hostnames
+  hosts:
+    - api.k8s.besson.co
+  # can also be letsencrypt-staging for testing purposes
+  # will be used as an annotation for the ingress: certmanager.k8s.io/cluster-issuer
+  clusterIssuerName: letsencrypt-prod
+
+imageCredentials:
+  registry: registry.k8s.besson.co
+  username: k8s
+  password: thisisatest
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+postgresql:
+  postgresDatabase: api
+  postgresUser: api
+  persistence:
+    enabled: true
