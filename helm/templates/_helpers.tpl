@@ -38,3 +38,14 @@ Create chart name and version as used by the chart label.
 {{- define "postgresql.fullname" -}}
 {{- printf "%s-%s" .Release.Name "postgresql" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "wait-for-db" -}}
+initContainers:
+  - name: check-db-ready
+    image: postgres:9.6.5
+    command: ['sh', '-c', "until pg_isready -d {{ default "api" .Values.postgresDatabase }} -U {{ default "api" .Values.postgresUser }} -t 3 -h {{ template "postgresql.fullname" . }}; do echo waiting for database; sleep 2; done;"]
+{{- end -}}
+
+{{/*
+  command: ['sh', '-c', "until nslookup {{ template "postgresql.fullname" . }}; do echo waiting for {{ template "postgresql.fullname" . }}; sleep 2; done;"]
+*/}}

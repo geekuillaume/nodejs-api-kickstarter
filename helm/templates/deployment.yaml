@@ -19,6 +19,7 @@ spec:
         app: {{ template "nodejs-api-boilerplate.name" . }}
         release: {{ .Release.Name }}
     spec:
+{{ include "wait-for-db" . | indent 6 }}
       imagePullSecrets:
         - name: {{ template "nodejs-api-boilerplate.fullname" . }}-registry
       containers:

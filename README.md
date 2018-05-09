@@ -131,7 +131,9 @@ The `npm run doc:generate` command can be used to execute the script to generate
 
 You should look at the dedicated [README](misc/internals/docsComponents/README.md) for more information.
 
-## Kuberenetes Deploiement
+## Kuberenetes Deployement
+
+Not yet working because of a problem with the way the PSQL password is generated.
 
 TODO:
 - write a real documentation here

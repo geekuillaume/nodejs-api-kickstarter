@@ -22,6 +22,7 @@ spec:
       imagePullSecrets:
         - name: {{ template "nodejs-api-boilerplate.fullname" . }}-registry
       restartPolicy: Never
+{{ include "wait-for-db" . | indent 6 }}
       containers:
       - name: db-migrate-job
         image: "{{ .Values.imageCredentials.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
