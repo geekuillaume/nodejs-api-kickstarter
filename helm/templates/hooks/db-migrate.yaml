@@ -35,7 +35,9 @@ spec:
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "postgresql.fullname" . }}
+              # We should use {{ template "postgresql.secretName" . }} here but we can't because of this issue:
+              # https://github.com/kubernetes/helm/issues/3920
+              name: {{ .Values.postgresql.existingSecret }}
               key: postgres-password
         - name: DB_NAME
           value: {{ default "api" .Values.postgresDatabase | quote }}

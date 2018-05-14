@@ -140,6 +140,7 @@ TODO:
 - add info in NOTES.txt
 - talk about autoMigrate
 - explain how to change name
+- document removing secrets on delete
 
 Rancher
 Docker registry
@@ -157,5 +158,8 @@ This is because you didn't change the `jwtSecret` in you config file. Add a `jwt
 
 - [Sentry] integration (optional)
 - Password reset via email
-- Continous Integration (Docker, Kubernetes)
 - Upload coverage and documentation to AWS S3
+- Prometheus integration
+- ConfigMap on Kubernetes
+- JWT secret in Kubernetes secret
+- CircleCI CD to Kubernetes

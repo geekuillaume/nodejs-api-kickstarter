@@ -1,4 +1,4 @@
-replicaCount: 3
+replicaCount: 1
 
 # Launch npm run db:migrate on helm upgrade
 autoMigrate: true
@@ -36,5 +36,10 @@ resources: {}
 postgresql:
   postgresDatabase: api
   postgresUser: api
+  # We cannot use templating here, so we cannot generate a unique name for our secret
+  # This means that you should install each release of this chart in different namespaces else the psql-password secret will be overwritten
+  # Here's a PR that should fix this issue: https://github.com/kubernetes/helm/pull/3252
+  # Ref issue: https://github.com/kubernetes/helm/issues/2492
+  existingSecret: psql-password
   persistence:
     enabled: true

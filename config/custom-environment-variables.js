@@ -9,4 +9,5 @@ module.exports = {
       database: 'DB_NAME',
     },
   },
+  jwtSecret: 'JWT_SECRET',
 };
