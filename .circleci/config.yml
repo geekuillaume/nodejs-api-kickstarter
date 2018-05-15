@@ -47,7 +47,7 @@ jobs:
       - run: docker push $DOCKER_REGISTRY/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
   deploy_to_k8s:
     docker:
-      - image: quai.io/roboll/helmfile
+      - image: quay.io/roboll/helmfile
     working_directory: ~/repo
     steps:
       - checkout
