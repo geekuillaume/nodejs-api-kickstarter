@@ -18,7 +18,7 @@ releases:
       - name: exposing.hosts[0]
         value: {{ if eq $branch "master" }} {{ $masterHost }} {{ else }} {{ $branch }}{{ $branchesHost }} {{ end }}
       - name: image.repository
-        value: {{ requiredEnv "DOCKER_REGISTRY" }}/{{ requiredEnv "CIRCLE_PROJECT_USERNAME" }}/{{ requiredEnv "CIRCLE_PROJECT_REPONAME" }}
+        value: {{ requiredEnv "CIRCLE_PROJECT_USERNAME" }}/{{ requiredEnv "CIRCLE_PROJECT_REPONAME" }}
       - name: image.tag
         value: {{ requiredEnv "CIRCLE_SHA1" }}
       - name: imageCredentials.registry

@@ -51,6 +51,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo $KUBE_CONFIG > /root/.kube/config
+      - run: mkdir -p $HOME/.kube
+      - run: echo $KUBE_CONFIG > $HOME/.kube/config
       - run: helm init --client-only
       - run: helmfile sync
