@@ -1,0 +1,31 @@
+# When master is deployed, it will be exposed on this hostname:
+{{ $masterHost := "api.k8s.besson.co" }}
+# When another branch is deployed, it's host will be this prepended by the branch name:
+{{ $branchesHost := "-api.k8s.besson.co" }}
+
+{{ $masterReplicaCount := 3 }}
+{{ $otherBranchesReplicaCount := 1 }}
+
+# Using CircleCI env variable, change this with the variable you use
+{{ $reponame := env "CIRCLE_PROJECT_REPONAME" | default "api-kickstarter" }}
+{{ $branch := env "CIRCLE_BRANCH" | default "master" }}
+
+releases:
+  - name: {{ $reponame }}-{{ $branch }}
+    namespace: {{ $reponame }}-{{ $branch }}
+    chart: ./helm
+    set:
+      - name: exposing.hosts[0]
+        value: {{ if eq $branch "master" }} {{ $masterHost }} {{ else }} {{ $branch }}{{ $branchesHost }} {{ end }}
+      - name: image.repository
+        value: {{ requiredEnv "DOCKER_REGISTRY" }}/{{ requiredEnv "CIRCLE_PROJECT_USERNAME" }}/{{ requiredEnv "CIRCLE_PROJECT_REPONAME" }}
+      - name: image.tag
+        value: {{ requiredEnv "CIRCLE_SHA1" }}
+      - name: imageCredentials.registry
+        value: {{ requiredEnv "DOCKER_REGISTRY" }}
+      - name: imageCredentials.username
+        value: {{ requiredEnv "DOCKER_USER" }}
+      - name: imageCredentials.password
+        value: {{ requiredEnv "DOCKER_PASSWORD" }}
+      - name: replicaCount
+        value: {{ if eq $branch "master" }} {{ $masterReplicaCount }} {{ else }} {{ $otherBranchesReplicaCount }} {{ end }}
