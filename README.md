@@ -3,9 +3,11 @@
 </p>
 
 <p align="center">
-  An <em>opinionated</em> NodeJS API Boilerplate<br/>
+  A <em>batteries included</em> NodeJS API Kickstater<br/>
   focused on extensability and developer productivity.
 </p>
+
+<p align="center" color="grey">Included:</p>
 
 <p align="center">
   <a href="#whatsinside">What's inside?</a> •
@@ -21,11 +23,14 @@
   <a href="https://circleci.com/gh/geekuillaume/nodejs-api-kickstarter">
     <img src="https://img.shields.io/circleci/project/github/geekuillaume/nodejs-api-kickstarter.svg">
   </a>
-  <!-- <a href="./package.json">
-    <img src="https://img.shields.io/npm/v/permit.svg?maxAge=300&label=version&colorB=007ec6&maxAge=300">
-  </a> -->
+  <a href="https://circleci.com/gh/geekuillaume/nodejs-api-kickstarter">
+    <img src="https://circleci.com/gh/geekuillaume/nodejs-api-kickstarter.svg?style=svg">
+  </a>
   <a href="./LICENSE.md">
     <img src="https://img.shields.io/github/license/geekuillaume/nodejs-api-kickstarter.svg">
+  </a>
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square">
   </a>
 </p>
 
@@ -133,7 +138,7 @@ You should look at the dedicated [README](misc/internals/docsComponents/README.m
 
 ## Kuberenetes Deployement
 
-A fully-fonctionnal [Helm](https://helm.sh/) chart is provided in this project to deploy this project. It will deploy PostgreSQL and the API on your Kubernetes cluster. A CircleCI integration is also provided to deploy the API on each push and create new environments on each branch creation. The configuration doesn't depend on a specific Cloud service and you can deploy it to bare metal servers. No GCloud or AWS load-balancers are used (could be a limitation).
+A fully-fonctional [Helm](https://helm.sh/) chart is provided in this project to deploy this project. It will deploy PostgreSQL and the API on your Kubernetes cluster. A CircleCI integration is also provided to deploy the API on each push and create new environments on each branch creation. The configuration doesn't depend on a specific Cloud service and you can deploy it to bare metal servers. No GCloud or AWS load-balancers are used (could be a limitation).
 
 To start using it, you first need a Kubernetes Cluster accessible from the outside world. It can be a little hard to get a good source about how to deploy a cluster from scratch when you don't have any Kubernetes experience. I used [Rancher](https://rancher.com/) to deploy one and I highly recommend it. You also need to have [Helm](https://docs.helm.sh/using_helm/#installing-helm) and [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed on your machine.
 
@@ -158,9 +163,6 @@ Once it's done, you just have to launch a build from the CircleCI interface or p
 
 To deploy it from your dev machine or to adapt the CI process to another CI provider. I suggest that you take a look at the `.circleci/config.yml` file to get a sense of what it is doing.
 
-TODO:
-- add info in NOTES.txt
-
 ## Troubleshooting
 
 ### I need to reauth after restarting my server
@@ -173,6 +175,4 @@ This is because you didn't change the `jwtSecret` in you config file. Add a `jwt
 - Password reset via email
 - Upload coverage and documentation to AWS S3
 - Prometheus integration
-- ConfigMap on Kubernetes
-- JWT secret in Kubernetes secret
-- CircleCI CD to Kubernetes
+- Adding info in helm NOTES.txt
