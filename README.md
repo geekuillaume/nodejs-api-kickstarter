@@ -7,8 +7,6 @@
   focused on extensability and developer productivity.
 </p>
 
-<p align="center" color="grey">Included:</p>
-
 <p align="center">
   <a href="#whatsinside">What's inside?</a> •
   <a href="#requirements">Requirements</a> •
@@ -59,6 +57,9 @@ It's meant to be used with a front-end consuming the API like a mobile app or a 
 - [Node-Config](https://github.com/lorenwest/node-config) for configuration and environment variable handling
 - [Nodemon](https://github.com/remy/nodemon) to auto-reload your server when saving
 - Tricky parts of code fully commented
+- Kubernetes Deployement with PostgreSQL
+- Continuous integration / deployement with CircleCI
+- Separated env on Kubernetes for each branch
 
 ## Requirements
 
