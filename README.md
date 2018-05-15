@@ -133,20 +133,33 @@ You should look at the dedicated [README](misc/internals/docsComponents/README.m
 
 ## Kuberenetes Deployement
 
-Not yet working because of a problem with the way the PSQL password is generated.
+A fully-fonctionnal [Helm](https://helm.sh/) chart is provided in this project to deploy this project. It will deploy PostgreSQL and the API on your Kubernetes cluster. A CircleCI integration is also provided to deploy the API on each push and create new environments on each branch creation. The configuration doesn't depend on a specific Cloud service and you can deploy it to bare metal servers. No GCloud or AWS load-balancers are used (could be a limitation).
+
+To start using it, you first need a Kubernetes Cluster accessible from the outside world. It can be a little hard to get a good source about how to deploy a cluster from scratch when you don't have any Kubernetes experience. I used [Rancher](https://rancher.com/) to deploy one and I highly recommend it. You also need to have [Helm](https://docs.helm.sh/using_helm/#installing-helm) and [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed on your machine.
+
+If you used Rancher or have a Nginx Ingress Controller installed (Rancher install by default), you can easily add [Let's Encrypt](https://letsencrypt.org/) integration with [cert-manager](https://github.com/jetstack/cert-manager) to get free SSL on your API. To do so, install the cert-manager helm chart with `helm install --name cert-manager stable/cert-manager`. You then need to create a ClusterIssuer ressource on your K8S cluster. I've included an [example file](misc/clusterissuer.yaml) that you should edit to include your email address (replace `YOUR_EMAIL_ADDRESS`), then create the ressource with `kubectl create -f ./misc/clusterissuer.yaml`.
+
+Next, we need a Docker Registry to host the Docker images that we will build (or that CircleCI will build for us). You can use the public Docker registry but if you are not creating an open-source project you probably want a private Docker Registry. I've included a [file](misc/docker_registry.yaml) containing the basic values needed to deploy a registry on your Kubernetes Cluster. You need to edit it (`misc/docker_registry.yaml`) to include your hostname (something like `registry.your-awesome-project.com`) and you username/password combo (the command needed to get the secret is documented in the file comments), then install it with `helm install stable/docker-registry --name registry --namespace registry -f ./misc/docker_registry.yaml`. You can now authentify your local Docker client with `docker login YOUR_REGISTRY_HOSTNAME`.
+
+By default, Helm execute your SQL migrations on install and on each upgrade. This can be a behaviour that you don't want if you need to control the way it's executed. You can switch `autoMigrate` to `false` in the `helm/values.yaml` file to disable it.
+
+When you install for the first time a release, a new JWT secret is created. To get more information about how to access it, use the `helm status [YOUR_RELEASE_NAME]` command. To get the releases installed, use the `helm ls` command.
+
+Now, you can either build and deploy the API from your own computer or configure CircleCI to do it for you.
+
+I've included a functionnal CircleCI [configuration file](.circleci/config.yml) that will test the code, generate the test coverage and save it as [artifacts](https://circleci.com/docs/2.0/artifacts/), build the docker image, push it to your Docker Registry and use Helmfile to upgrade or install the API. All branch will be deployed on Kubernetes, each on a new subdomain with a new instance of the database. You should configure the domain names for the master and the other branches in `helmfile.yaml`. You also need to add 4 environment variables in your project CircleCI configuration:
+
+- DOCKER_REGISTRY: the hostname of your registry
+- DOCKER_USER: the username you used to generate the secret in `misc/docker_registry.yaml`
+- DOCKER_PASSWORD: the password you used to generate the secret in `misc/docker_registry.yaml`
+- KUBE_CONFIG: your kubectl config, you can get it from your own machine in `$HOME/.kube/config`. You need to convert it to JSON because we loose newlines in the env variable. To do so, use an online service like [json2yaml](https://www.json2yaml.com/).
+
+Once it's done, you just have to launch a build from the CircleCI interface or push to Github to trigger a build.
+
+To deploy it from your dev machine or to adapt the CI process to another CI provider. I suggest that you take a look at the `.circleci/config.yml` file to get a sense of what it is doing.
 
 TODO:
-- write a real documentation here
 - add info in NOTES.txt
-- talk about autoMigrate
-- explain how to change name
-- document removing secrets on delete
-
-Rancher
-Docker registry
-Cert-manager
-`helm dependency update`
-`helm upgrade --install nodejsapi ./helm --namespace nodejsapi`
 
 ## Troubleshooting
 

@@ -1,7 +1,11 @@
-# When master is deployed, it will be exposed on this hostname:
-{{ $masterHost := "api.k8s.besson.co" }}
-# When another branch is deployed, it's host will be this prepended by the branch name:
-{{ $branchesHost := "-api.k8s.besson.co" }}
+# This file uses some env variables used by CircleCI, to use it locally, look at the misc/localEnvForDeployement.sh file
+
+# When master is deployed, it will be exposed on this domain:
+{{ $masterHost := "api.YOUR_DOMAIN.com" }}
+# When another branch is deployed, its domain will be  host will be this prepended by the branch name:
+# If you want subdomain, you can use something like ".dev.your-project.com" and it will generate "develop.dev.your-project.com" for the develop branch
+# you can also use something like "-dev.your-project.com" and it will be "develop-dev.your-project.com"
+{{ $branchesHost := ".dev.YOUR_DOMAIN.com" }}
 
 {{ $masterReplicaCount := 3 }}
 {{ $otherBranchesReplicaCount := 1 }}

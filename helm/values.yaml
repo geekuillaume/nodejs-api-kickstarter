@@ -5,21 +5,21 @@ autoMigrate: true
 
 image:
   # replace this name with the name of your docker image you pushed to the registry
-  repository: geekuillaume/nodejs-api-boilerplate
-  tag: latest
+  repository: will_be_changed_by_helmfile
+  tag: will_be_changed_by_helmfile
 
 exposing:
   # replace this with your hostnames
   hosts:
-    - api.k8s.besson.co
+    - will_be_changed_by_helmfile
   # can also be letsencrypt-staging for testing purposes
   # will be used as an annotation for the ingress: certmanager.k8s.io/cluster-issuer
   clusterIssuerName: letsencrypt-prod
 
 imageCredentials:
-  registry: registry.k8s.besson.co
-  username: k8s
-  password: thisisatest
+  registry: will_be_changed_by_helmfile
+  username: will_be_changed_by_helmfile
+  password: will_be_changed_by_helmfile
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
