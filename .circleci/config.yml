@@ -4,11 +4,12 @@ workflows:
   build_test_deploy:
     jobs:
     - test
-    - build_docker
-    - deploy_to_k8s:
-        requires:
-        - test
-        - build_docker
+    # Uncomment this to deploy to Kubernetes on each push
+    # - build_docker
+    # - deploy_to_k8s:
+    #     requires:
+    #     - test
+    #     - build_docker
 jobs:
   test:
     docker:
