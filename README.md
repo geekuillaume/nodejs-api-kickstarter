@@ -121,7 +121,7 @@ Migrations are handled by [Knex migration tool](http://knexjs.org/#Migrations). 
 
 This project includes a service to send emails to your users. It's used to send the activation link after the account creation and send the "Forgot password" link. In development mode, you can use the [Ethereal.email](https://ethereal.email) service to debug the emails your sending without really having to send them. I've included the instructions about how to create an account in the [config/development.js](config/development.js) file.
 
-The email service uses the [Nodemailer](https://nodemailer.com/about/) module ans is compatible with all SMTP transactionnal email service providers. To get more informations about how you can configure it for you own usage, look at the [documentation](https://nodemailer.com/smtp/).
+The email service uses the [Nodemailer](https://nodemailer.com/about/) module and is compatible with all SMTP transactional email service providers. To get more information about how you can configure it for you own usage, look at the [documentation](https://nodemailer.com/smtp/).
 
 ### Account activation
 
@@ -137,13 +137,13 @@ The `npm run doc:generate` command can be used to execute the script to generate
 
 You should look at the dedicated [README](misc/internals/docsComponents/README.md) for more information.
 
-## Kuberenetes Deployement
+## Kubernetes Deployement
 
 A fully-fonctional [Helm](https://helm.sh/) chart is provided in this project to deploy this project. It will deploy PostgreSQL and the API on your Kubernetes cluster. A CircleCI integration is also provided to deploy the API on each push and create new environments on each branch creation. The configuration doesn't depend on a specific Cloud service and you can deploy it to bare metal servers. No GCloud or AWS load-balancers are used (could be a limitation).
 
 To start using it, you first need a Kubernetes Cluster accessible from the outside world. It can be a little hard to get a good source about how to deploy a cluster from scratch when you don't have any Kubernetes experience. I used [Rancher](https://rancher.com/) to deploy one and I highly recommend it. You also need to have [Helm](https://docs.helm.sh/using_helm/#installing-helm) and [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed on your machine.
 
-If you used Rancher or have a Nginx Ingress Controller installed (Rancher install by default), you can easily add [Let's Encrypt](https://letsencrypt.org/) integration with [cert-manager](https://github.com/jetstack/cert-manager) to get free SSL on your API. To do so, install the cert-manager helm chart with `helm install --name cert-manager stable/cert-manager`. You then need to create a ClusterIssuer ressource on your K8S cluster. I've included an [example file](misc/clusterissuer.yaml) that you should edit to include your email address (replace `YOUR_EMAIL_ADDRESS`), then create the ressource with `kubectl create -f ./misc/clusterissuer.yaml`.
+If you use Rancher or have a Nginx Ingress Controller installed (Rancher install by default), you can easily add [Let's Encrypt](https://letsencrypt.org/) integration with [cert-manager](https://github.com/jetstack/cert-manager) to get free SSL on your API. To do so, install the cert-manager helm chart with `helm install --name cert-manager stable/cert-manager`. You then need to create a ClusterIssuer ressource on your K8S cluster. I've included an [example file](misc/clusterissuer.yaml) that you should edit to include your email address (replace `YOUR_EMAIL_ADDRESS`), then create the ressource with `kubectl create -f ./misc/clusterissuer.yaml`.
 
 Next, we need a Docker Registry to host the Docker images that we will build (or that CircleCI will build for us). You can use the public Docker registry but if you are not creating an open-source project you probably want a private Docker Registry. I've included a [file](misc/docker_registry.yaml) containing the basic values needed to deploy a registry on your Kubernetes Cluster. You need to edit it (`misc/docker_registry.yaml`) to include your hostname (something like `registry.your-awesome-project.com`) and you username/password combo (the command needed to get the secret is documented in the file comments), then install it with `helm install stable/docker-registry --name registry --namespace registry -f ./misc/docker_registry.yaml`. You can now authentify your local Docker client with `docker login YOUR_REGISTRY_HOSTNAME`.
 
@@ -153,7 +153,7 @@ When you install for the first time a release, a new JWT secret is created. To g
 
 Now, you can either build and deploy the API from your own computer or configure CircleCI to do it for you.
 
-I've included a functionnal CircleCI [configuration file](.circleci/config.yml) that will test the code, generate the test coverage and save it as [artifacts](https://circleci.com/docs/2.0/artifacts/), build the docker image, push it to your Docker Registry and use Helmfile to upgrade or install the API. All branch will be deployed on Kubernetes, each on a new subdomain with a new instance of the database. You should configure the domain names for the master and the other branches in `helmfile.yaml`. You also need to add 4 environment variables in your project CircleCI configuration:
+I've included a functional CircleCI [configuration file](.circleci/config.yml) that will test the code, generate the test coverage and save it as [artifacts](https://circleci.com/docs/2.0/artifacts/), build the docker image, push it to your Docker Registry and use Helmfile to upgrade or install the API. All branch will be deployed on Kubernetes, each on a new subdomain with a new instance of the database. You should configure the domain names for the master and the other branches in `helmfile.yaml`. You also need to add 4 environment variables in your project CircleCI configuration:
 
 - DOCKER_REGISTRY: the hostname of your registry
 - DOCKER_USER: the username you used to generate the secret in `misc/docker_registry.yaml`
