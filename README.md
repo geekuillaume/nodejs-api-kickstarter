@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./misc/logo.svg" width="500" />
+  <img src="./misc/images/logo.svg" width="500" />
 </p>
 
 <p align="center">
@@ -40,6 +40,37 @@ This is a project based on NodeJS and Koa (and some other libs) implementing a R
 It's meant to be used with a front-end consuming the API like a mobile app or a SPA built with for example [React](https://reactjs.org/), [Angular](https://angular.io/) or [Vue](https://vuejs.org/index.html).
 
 ## What's inside?
+
+<table border="0" align="center">
+  <tbody>
+    <tr>
+      <td>
+        <p align="center"><img src="misc/images/koa.svg" height="50"></p>
+        <p align="center">Koa.js REST API</p>
+      </td>
+      <td>
+        <p align="center"><img src="misc/images/login.svg" width="50"></p>
+        <p align="center">User authentication</p>
+      </td>
+      <td>
+        <p align="center"><img src="misc/images/send.svg" width="50"></p>
+        <p align="center">SMTP + Email templating</p>
+      </td>
+      <td>
+        <p align="center"><img src="misc/images/tests.svg" width="50"></p>
+        <p align="center">E2E tests</p>
+      </td>
+      <td>
+        <p align="center"><img src="misc/images/kubernetes.svg" width="50"></p>
+        <p align="center">Kubernetes deployement</p>
+      </td>
+      <td>
+        <p align="center"><img src="misc/images/circleci.png" width="50"></p>
+        <p align="center">CI/CD with CircleCI</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 - [Koa](http://koajs.com/) with async/await code to handle asynchronous tasks
 - [TypeScript](http://www.typescriptlang.org/) for awesome Developer Experience
@@ -90,15 +121,15 @@ The server comes packed with some useful commands (defined in `package.json`):
 
 ### Watch tests
 
-<img src="./misc/watch_tests.gif">
+<img src="./misc/images/watch_tests.gif">
 
 ### Email preview
 
-<img src="./misc/email_preview.gif">
+<img src="./misc/images/email_preview.gif">
 
 ### Pre-commit linting
 
-<img src="./misc/precommit_eslint.gif">
+<img src="./misc/images/precommit_eslint.gif">
 
 
 ## Customizing it
@@ -177,3 +208,5 @@ This is because you didn't change the `jwtSecret` in you config file. Add a `jwt
 - Upload coverage and documentation to AWS S3
 - Prometheus integration
 - Adding info in helm NOTES.txt
+
+Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> and <a href="https://www.flaticon.com/authors/nhor-phai" title="Nhor Phai">Nhor Phai</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
