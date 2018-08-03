@@ -1,6 +1,7 @@
 import * as Koa from 'koa';
 import * as koaBody from 'koa-body';
 import * as koaLogger from 'koa-logger';
+import * as cors from '@koa/cors';
 
 import router from './routes/index';
 import { errorMiddleware } from './lib/errorMiddleware';
@@ -12,6 +13,7 @@ app.use(koaLogger((str) => {
   logger.debug(str);
 }));
 
+app.use(cors());
 // There is some default limits on the size of each type of body
 // look at the documentation for more info https://github.com/dlau/koa-body
 app.use(koaBody());
