@@ -6,3 +6,8 @@ export const userSchema = joi.object().keys({
   active: joi.boolean().notes('A user is active after confirming their email address by clicking the link sent on registration'),
 });
 
+export interface User {
+  id?: string;
+  email: string;
+  active: boolean;
+}

@@ -1,4 +1,4 @@
-import { User } from './userModel';
+import { User } from './userSchema';
 import { db } from '../db';
 import { generateTestUuid } from '../../lib/testsHelpers';
 

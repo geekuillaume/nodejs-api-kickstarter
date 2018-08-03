@@ -1,11 +1,14 @@
 import { testApi, asTestUser } from '../../lib/testApi';
-import { resetDb, generateTestUuid } from '../../lib/testsHelpers';
+import { generateTestUuid, prepareTestDb } from '../../lib/testsHelpers';
+import { startTransaction, resetTransaction } from '../../models/db';
 
 describe('Todo', () => {
+  beforeAll(prepareTestDb);
   beforeEach(async () => {
-    // We run all the migrations and seeds needed on the current sqlite
-    // database before running the tests
-    await resetDb();
+    await startTransaction();
+  });
+  afterEach(() => {
+    resetTransaction();
   });
 
   it('should return the list of all todos for user', async () => {

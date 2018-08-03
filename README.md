@@ -35,7 +35,7 @@
 <br/>
 <br/>
 
-This is a project based on NodeJS and Koa (and some other libs) implementing a REST API to authenticate users and let them manage TODOs stored in a SQL database. It's easy to extend and provides you the best developer experience possible with a lot of nifty things already configured.
+This is a project based on NodeJS and Koa (and some other libs) implementing a REST API to authenticate users and let them manage TODOs stored in a PostgreSQL database. It's easy to extend and provides you the best developer experience possible with a lot of nifty things already configured.
 
 It's meant to be used with a front-end consuming the API like a mobile app or a SPA built with for example [React](https://reactjs.org/), [Angular](https://angular.io/) or [Vue](https://vuejs.org/index.html).
 
@@ -140,13 +140,13 @@ This project uses [node-config](https://github.com/lorenwest/node-config) to han
 
 ### SQL
 
-The SQL integration is made with [Knex](http://knexjs.org/). By default, only the sqlite adapter is installed but Knex allows you to use a lot of different SQL servers. You need to install the adapter for the server you're going to use, look at the documentation for more [information](http://knexjs.org/#Installation-node).
+The SQL integration is made with [Knex](http://knexjs.org/). By default, the PostgreSQL adapter is installed but you can use another, look at the Knex documentation for more [information](http://knexjs.org/#Installation-node).
 
-The sqlite adapter is primarly used as an in-memory portable database and shouldn't be used for production purposes. It's integrated by default because it's the simplest way to execute the tests as each Node process created by Jest will have it's own sqlite instance and each instance will be populated by the seed values before each test suite.
+The E2E tests are configured to run in a transaction to allow fast testing. The DB is migrated and seeded at the start of the test so be sure not to run the tests on your production DB.
 
 The SQL conf is located in each file of the [config](config) folder.
 
-Migrations are handled by [Knex migration tool](http://knexjs.org/#Migrations). You can look at the default [todos migration file](migrations/20180327160540_todos.ts) for an example. Migrations are run before each test suite to initialize the sqlite database, and so the database is wiped clean, be careful to never use you production database when running the tests. To create a new migration, use the `npm run db:createMigration -- YOUR_MIGRATION_NAME` command. It will create a new file in the [migrations/](migrations) folder that you should use to define your migration steps. To run all non executed migrations, use the `npm run db:migrate` command.
+Migrations are handled by [Knex migration tool](http://knexjs.org/#Migrations). You can look at the default [todos migration file](migrations/20180327160540_todos.ts) for an example. Migrations are run before running the tests and so the database is wiped clean, be careful to never use you production database when running the tests. To create a new migration, use the `npm run db:createMigration -- YOUR_MIGRATION_NAME` command. It will create a new file in the [migrations/](migrations) folder that you should use to define your migration steps. To run all non executed migrations, use the `npm run db:migrate` command.
 
 ### Email
 

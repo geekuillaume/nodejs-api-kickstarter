@@ -1,14 +1,19 @@
 import { testApi } from '../../lib/testApi';
-import { resetDb, generateTestUuid } from '../../lib/testsHelpers';
+import { generateTestUuid, prepareTestDb } from '../../lib/testsHelpers';
 import { sendEmail } from '../../lib/email';
 import { createActivationToken } from '../../lib/authToken';
+import { startTransaction, resetTransaction } from '../../models/db';
 
 // We are mocking the email module to not send emails in our tests
 jest.mock('../../lib/email');
 
 describe('User', () => {
+  beforeAll(prepareTestDb);
   beforeEach(async () => {
-    await resetDb();
+    await startTransaction();
+  });
+  afterEach(() => {
+    resetTransaction();
   });
 
   it('should create an account with email, password and username', async () => {

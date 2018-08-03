@@ -1,20 +1,35 @@
 import * as Knex from 'knex';
 import * as config from 'config';
 
-let knexInstance = Knex(config.get('db'));
+const knexInstance = Knex(config.get('db'));
+let trx: Knex.Transaction;
 
-// This is a getter instead of just exporting the knexInstance object
-// because we need to have a way to easily restart the db instance for
-// our test (with the resetInstance method)
-const db = () => knexInstance;
-
-const migrateDb = async () => {
+export const migrateDb = async () => {
   await knexInstance.migrate.latest();
 };
 
-const resetInstance = async () => {
-  await knexInstance.destroy();
-  knexInstance = Knex(config.get('db'));
+// These methods are used for testing purposes
+// It allow every db query between a startTransaction and resetTransaction to be rollbacked
+// This will keep the seeded DB in the same state between tests while staying fast
+export const startTransaction = () => new Promise((resolve) => {
+  knexInstance.transaction((newTrx) => {
+    trx = newTrx;
+    resolve(trx);
+  }).catch(() => {});
+});
+export const resetTransaction = async () => {
+  if (trx) {
+    trx.rollback();
+    trx = null;
+  }
 };
 
-export { db, migrateDb, resetInstance };
+// We use transactions here for testing purposes
+// It allows us to rollback queries made to PostgreSQL easily
+// Each test is running in a transaction
+export const db = () => {
+  return trx || knexInstance;
+};
+
+export const dbInstance = () => knexInstance;
+

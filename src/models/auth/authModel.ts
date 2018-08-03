@@ -51,7 +51,7 @@ export const createAuthAndUserIfNecessary = async ({
 }: createAuthAndUserIfNecessaryParams) => {
   return db().transaction(async (trx) => {
     let userId;
-    const [user] = await (trx.select('id').where({ email }).from('users'));
+    const user = await (trx.first('id').where({ email }).from('users'));
     if (!user) {
       userId = uuidv4();
       await trx.insert({ id: userId, email, active }).into('users');
@@ -59,10 +59,9 @@ export const createAuthAndUserIfNecessary = async ({
       userId = user.id;
     }
     const authId = uuidv4();
-    await trx.insert({
+    const [auth] = await trx.insert({
       id: authId, type, identifier, secret, active, userId,
-    }).into('auths');
-    const auth = await trx.first(authFields).from('auths').where({ id: authId });
+    }).into('auths').returning('*');
     return auth;
   });
 };

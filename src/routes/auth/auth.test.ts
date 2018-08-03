@@ -1,11 +1,14 @@
 import { testApi } from '../../lib/testApi';
-import { resetDb } from '../../lib/testsHelpers';
+import { prepareTestDb } from '../../lib/testsHelpers';
+import { startTransaction, resetTransaction } from '../../models/db';
 
 describe('Auth', () => {
+  beforeAll(prepareTestDb);
   beforeEach(async () => {
-    // We run all the migrations and seeds needed on the current sqlite
-    // database before running the tests
-    await resetDb();
+    await startTransaction();
+  });
+  afterEach(() => {
+    resetTransaction();
   });
 
   it('should return a token when authenticating with email', async () => {

@@ -1,26 +1,21 @@
 import { db } from '../db';
+import { userSchema, User } from './userSchema';
+import { joiToSQLFields } from '../../lib/joiHelpers';
 
 // The user object represent a single user in the db without taking care
 // of the auth methods of this user
 
-export interface User {
-  id?: string;
-  email: string;
-  active: boolean;
-}
-
-const userFields = ['id', 'email', 'active'];
+const userFields = joiToSQLFields(userSchema, 'users');
 
 interface getUserParams {
   id?: string;
   email?: string;
 }
 export const getUser = async (userInfo: getUserParams) => {
-  const user: User = (await db()
-    .select(userFields)
+  const user: User = await db()
+    .first(userFields)
     .from('users')
-    .where(userInfo)
-  )[0];
+    .where(userInfo);
   return user;
 };
 
@@ -29,15 +24,10 @@ interface createUserParams {
   active?: boolean;
 }
 export const createUser = async ({ email, active }: createUserParams) => {
-  const userId: number = (await db()
+  const user: User = await db()
     .insert({ email, active: active || false })
-    .into('users'))[0];
-  // we could use the .returning() function here, but because of sqlite
-  // we need to make a query to select the object
-  const user: User = (await db()
-    .select(userFields)
-    .from('users')
-    .where({ id: userId }))[0];
+    .returning(userFields)
+    .into('users');
   return user;
 };
 
