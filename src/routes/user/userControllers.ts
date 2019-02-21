@@ -1,26 +1,36 @@
 import * as Koa from 'koa';
 import * as config from 'config';
-import * as Joi from 'joi';
-import { BadRequest, NotFound } from '../../lib/errors';
-import { hash } from '../../lib/hash';
-import { AuthType, createAuthAndUserIfNecessary } from '../../models/auth/authModel';
-import { getUser, activateUser } from '../../models/user/userModel';
-import { createToken, createActivationToken, getUserIdFromActivationToken } from '../../lib/authToken';
-import { sendEmail } from '../../lib/email';
-import { accountActivationTemplate } from '../../misc/emailTemplates/accountActivation';
-import { emailAuthInputSchema } from '../../models/auth/authSchema';
+import { IsEmail, MinLength } from 'class-validator';
+
+import { BadRequest, NotFound } from '-/lib/errors';
+import { createAuthAndUserIfNecessary } from '-/models/authMethod/authMethodModel';
+import { getUser, activateUser } from '-/models/user/userModel';
+import { createToken, createActivationToken, getUserIdFromActivationToken } from '-/lib/authToken';
+import { sendEmail } from '-/lib/email';
+import { accountActivationTemplate } from '-/misc/emailTemplates/accountActivation';
+import { transformAndValidate } from '-/lib/helpers';
+import { AuthMethodType } from '-/models/authMethod/authMethodSchema';
+import { Transform } from 'class-transformer';
+import { toLower } from 'lodash';
+
+class EmailAuthBody {
+  @Transform(toLower, { toClassOnly: true })
+  @IsEmail()
+  email: string;
+
+  @MinLength(4)
+  password: string;
+}
 
 export const createUserController: Koa.Middleware = async (ctx) => {
-  const emailAuthBody = Joi.attempt(ctx.request.body, emailAuthInputSchema);
+  const emailAuthBody = await transformAndValidate(EmailAuthBody, ctx.request.body);
 
-  const auth = await createAuthAndUserIfNecessary({
-    type: AuthType.email,
+  const { user, authMethod } = await createAuthAndUserIfNecessary({
+    type: AuthMethodType.EMAIL,
     email: emailAuthBody.email,
-    secret: await hash(emailAuthBody.password),
-    identifier: emailAuthBody.email,
+    password: emailAuthBody.password,
   });
-  const user = await getUser({ id: auth.userId });
-  const activationToken = await createActivationToken(auth.userId);
+  const activationToken = await createActivationToken(user.id);
   await sendEmail({
     to: user.email,
     template: accountActivationTemplate,
@@ -28,12 +38,12 @@ export const createUserController: Koa.Middleware = async (ctx) => {
       activationLink: `${config.get('apiAddress')}/user/activate?token=${activationToken}`,
     },
   });
-  ctx.body = {
-    user,
-    auth: {
-      token: await createToken(user.id),
-    },
-  };
+  // ctx.body = {
+  //   user,
+  //   auth: {
+  //     token: await createToken(user.id),
+  //   },
+  // };
   ctx.status = 201;
 };
 

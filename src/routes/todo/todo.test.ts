@@ -1,14 +1,11 @@
-import { testApi, asTestUser } from '../../lib/testApi';
-import { generateTestUuid, prepareTestDb } from '../../lib/testsHelpers';
-import { startTransaction, resetTransaction } from '../../models/db';
+import { testApi, asTestUser } from '-/lib/testApi';
+import { generateTestUuid, prepareTestDb } from '-/lib/testsHelpers';
+import { rollbackGlobalTransaction } from '-/lib/requestContext';
 
 describe('Todo', () => {
   beforeAll(prepareTestDb);
-  beforeEach(async () => {
-    await startTransaction();
-  });
-  afterEach(() => {
-    resetTransaction();
+  afterEach(async () => {
+    await rollbackGlobalTransaction();
   });
 
   it('should return the list of all todos for user', async () => {

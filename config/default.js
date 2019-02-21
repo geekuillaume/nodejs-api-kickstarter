@@ -6,14 +6,15 @@ module.exports = {
   db: {
     // you should probably change this with the database you want to use in production
     // look at ./production.js for more info
-    client: 'pg',
-    // connection: {
-    //   host: '127.0.0.1',
-    //   user: 'your_database_user',
-    //   password: 'your_database_password',
-    //   database: 'myapp_test',
-    // },
-    // look here for more info: http://knexjs.org/#Installation-client
+    type: 'postgres',
+    host: '127.0.0.1',
+    database: 'kickstarter',
+    username: 'postgres',
+    entities: ['src/models/**/*Schema.ts'],
+    migrations: ['migrations/*.ts'],
+    cli: {
+      migrationsDir: 'migrations',
+    },
   },
   hashingRounds: 10,
   // you should change this by a fixed token that you should generate securely

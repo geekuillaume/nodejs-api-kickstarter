@@ -1,14 +1,11 @@
-import { testApi } from '../../lib/testApi';
-import { prepareTestDb } from '../../lib/testsHelpers';
-import { startTransaction, resetTransaction } from '../../models/db';
+import { testApi } from '-/lib/testApi';
+import { prepareTestDb } from '-/lib/testsHelpers';
+import { rollbackGlobalTransaction } from '-/lib/requestContext';
 
 describe('Auth', () => {
   beforeAll(prepareTestDb);
-  beforeEach(async () => {
-    await startTransaction();
-  });
-  afterEach(() => {
-    resetTransaction();
+  afterEach(async () => {
+    await rollbackGlobalTransaction();
   });
 
   it('should return a token when authenticating with email', async () => {

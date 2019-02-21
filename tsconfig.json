@@ -6,7 +6,15 @@
     "outDir": "./dist",
     "target": "es2017",
     "noImplicitAny": false,
-    "module": "commonjs"
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./src/",
+    "paths": {
+      "-/*": [
+        "./*"
+      ]
+    }
   },
   "include": [
     "src/**/*"

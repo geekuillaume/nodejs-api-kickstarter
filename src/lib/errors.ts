@@ -53,4 +53,6 @@ const prettyPrintError = (err) => {
   console.error(pe.render(err)); // eslint-disable-line
 };
 
-export { NotFound, Unauthorized, CustomError, BadRequest, prettyPrintError };
+export {
+  NotFound, Unauthorized, CustomError, BadRequest, prettyPrintError,
+};

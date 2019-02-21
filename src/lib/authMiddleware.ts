@@ -2,16 +2,20 @@ import * as Koa from 'koa';
 import { startsWith } from 'lodash';
 import * as compose from 'koa-compose';
 import { getUserIdFromToken } from './authToken';
-import { getUser, User } from '../models/user/userModel';
+import { getUser } from '../models/user/userModel';
 import { Unauthorized } from './errors';
+import { User } from '../models/user/userSchema';
 
 export interface AuthentifiedMiddleware {
-  (ctx: AuthentifiedContext, next: () => Promise<any>): any
+  (ctx: Koa.Context, next: () => Promise<any>): any
 }
 
-export interface AuthentifiedContext extends Koa.Context {
-  user: User,
+declare module 'koa' {
+  interface BaseContext {
+    user: User;
+  }
 }
+
 
 export const injectUser: Koa.Middleware = async (ctx, next) => {
   if (ctx.user) {

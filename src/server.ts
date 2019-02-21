@@ -3,11 +3,24 @@ import * as koaBody from 'koa-body';
 import * as koaLogger from 'koa-logger';
 import * as cors from '@koa/cors';
 
+// needed for typeorm
+import 'reflect-metadata';
+
 import router from './routes/index';
 import { errorMiddleware } from './lib/errorMiddleware';
 import logger from './lib/log';
+import {
+  initHooks, initContext, attachRequestContext, getContext,
+} from './lib/requestContext';
+
+initHooks();
+initContext();
+const rootContext = getContext();
+rootContext.level = 'root';
 
 const app = new Koa();
+
+app.use(attachRequestContext);
 
 app.use(koaLogger((str) => {
   logger.debug(str);
@@ -23,9 +36,3 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 export default app;
-
-declare module 'koa' {
-  interface Request {
-    body: any;
-  }
-}

@@ -1,6 +1,6 @@
 module.exports = {
     "extends": ["airbnb-base", "plugin:jest/recommended"],
-    "parser": "typescript-eslint-parser",
+    "parser": "@typescript-eslint/parser",
     rules: {
         strict: 0,
         semi: 2,
@@ -10,7 +10,9 @@ module.exports = {
         "import/prefer-default-export": 0,
         "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts", "**/testApi.ts", '**/*.seed.ts', 'misc/**/*.ts'] }],
         "typescript/no-unused-vars": 2,
-        "arrow-body-style": 0
+        "arrow-body-style": 0,
+        "max-len": ["error", { "ignoreComments": true, "code": 120 }],
+        "no-empty": ["error", {"allowEmptyCatch": true}]
     },
     "plugins": [
         "typescript",
@@ -21,7 +23,7 @@ module.exports = {
     },
     overrides: {
         files: ['**/*.ts'],
-        parser: 'typescript-eslint-parser',
+        parser: '@typescript-eslint/parser',
         rules: {
             'no-undef': 'off',
             'no-restricted-globals': 'off'

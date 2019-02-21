@@ -1,7 +1,7 @@
 import * as Winston from 'winston';
 import * as config from 'config';
 
-const logger: Winston.LoggerInstance = Winston.createLogger({
+const logger: Winston.Logger = Winston.createLogger({
   level: config.get('loggerLevel'),
   format: Winston.format.json(),
   transports: [
