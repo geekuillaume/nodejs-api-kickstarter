@@ -22,17 +22,17 @@ describe('Auth', () => {
     expect(typeof body.token).toBe('string');
   });
 
-  it('should return a 404 when email is unknown', async () => {
+  it('should return a 401 when email is unknown', async () => {
     const { body } = await testApi()
       .post('/auth/email')
       .send({
         email: 'unknown@test.com',
         password: 'test',
       })
-      .expect(404);
+      .expect(401);
 
     expect(body).toBeInstanceOf(Object);
-    expect(body.message).toBe('Email not found');
+    expect(body.message).toBe('Incorrect password or unknown email');
   });
 
   it('should return a 401 when password is incorrect', async () => {
@@ -45,7 +45,7 @@ describe('Auth', () => {
       .expect(401);
 
     expect(body).toBeInstanceOf(Object);
-    expect(body.message).toBe('Incorrect password');
+    expect(body.message).toBe('Incorrect password or unknown email');
   });
 
   it('should return a 400 when email is not specified', async () => {

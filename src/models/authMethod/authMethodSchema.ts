@@ -4,12 +4,6 @@ import {
 import { User } from '-/models/user/userSchema';
 import { hash, compare } from '-/lib/hash';
 
-// export const emailAuthInputSchema = joi.object().keys({
-//   email: joi.string().trim().email().lowercase()
-//     .required(),
-//   password: joi.string().required(),
-// }).options({ stripUnknown: true });
-
 export enum AuthMethodType {
   EMAIL = 'email',
 }
@@ -47,6 +41,6 @@ export class AuthMethod {
   active: boolean;
 
   async compareHash(val: string) {
-    return compare(this.hashedPassword, val);
+    return compare(val, this.hashedPassword);
   }
 }

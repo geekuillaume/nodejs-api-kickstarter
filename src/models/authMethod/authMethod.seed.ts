@@ -17,6 +17,7 @@ export const getSeededAuthMethods = async () => {
     type: AuthMethodType.EMAIL,
     email: `test${i}@test.com`,
     hashedPassword: password,
+    active: i < 15,
   }));
 
   return auths;

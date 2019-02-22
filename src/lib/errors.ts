@@ -18,7 +18,7 @@ class NotFound extends CustomError {
     super(message, 404, details);
   }
 
-  static assert(test, message?:string, details?) {
+  static assert(test, message?: string, details?) {
     if (!test) {
       throw new this(message, details);
     }

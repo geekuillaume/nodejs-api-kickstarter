@@ -41,4 +41,3 @@ export const getUserIdFromActivationToken = async (token: string) => {
   Unauthorized.assert(typeof body.activateUid === 'string', 'Invalid token');
   return body.activateUid;
 };
-

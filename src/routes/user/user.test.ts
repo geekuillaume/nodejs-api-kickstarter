@@ -94,4 +94,22 @@ describe('User', () => {
 
     expect(body).toHaveProperty('message', 'Validation error');
   });
+
+  it('should not get user if token is invalid', async () => {
+    const { body } = await testApi()
+      .get('/user/me')
+      .set('Authorization', 'Bearer invalidTOKEN')
+      .expect(401);
+
+    expect(body).toHaveProperty('message', 'Invalid auth token');
+  });
+
+  it('should get own user if token is valid', async () => {
+    const { body } = await testApi()
+      .get('/user/me')
+      .set('Authorization', 'Bearer authTokenTokenForUser1')
+      .expect(200);
+
+    expect(body).toHaveProperty('email', 'test1@test.com');
+  });
 });

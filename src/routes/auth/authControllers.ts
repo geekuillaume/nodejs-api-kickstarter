@@ -1,26 +1,40 @@
 import * as Koa from 'koa';
-import * as Joi from 'joi';
-import { NotFound, Unauthorized } from '../../lib/errors';
-// import { getAuth, AuthType } from '../../models/auth/authModel';
-import { compare } from '../../lib/hash';
-import { createToken } from '../../lib/authToken';
-// import { emailAuthInputSchema } from '../../models/auth/authSchema';
+import { Transform } from 'class-transformer';
+import { IsEmail, IsString } from 'class-validator';
+import { toLower } from 'lodash';
+
+import { Unauthorized } from '../../lib/errors';
+import { transformAndValidate } from '-/lib/helpers';
+import { AuthMethodType } from '-/models/authMethod/authMethodSchema';
+import { getAuth } from '-/models/authMethod/authMethodModel';
+import { AuthToken } from '-/models/authToken/authTokenSchema';
+
+class EmailAuthInput {
+  @IsEmail()
+  @Transform(toLower, { toClassOnly: true })
+  email: string;
+
+  @IsString()
+  password: string;
+}
 
 const emailAuthController: Koa.Middleware = async (ctx) => {
-  // const authBody = Joi.attempt(ctx.request.body, emailAuthInputSchema);
+  const authBody = await transformAndValidate(EmailAuthInput, ctx.request.body);
 
-  // const auth = await getAuth({
-  //   type: AuthType.email,
-  //   identifier: authBody.email,
-  // });
-  // NotFound.assert(auth, 'Email not found');
-  // const isCorrectPassword = await compare(authBody.password, auth.secret);
-  // Unauthorized.assert(isCorrectPassword, 'Incorrect password');
-  // const token = await createToken(auth.userId);
-  // ctx.body = {
-  //   status: 'ok',
-  //   token,
-  // };
+  const auth = await getAuth({
+    type: AuthMethodType.EMAIL,
+    email: authBody.email,
+  });
+  // not exposing if email is registered or not
+  Unauthorized.assert(auth, 'Incorrect password or unknown email');
+  const isCorrectPassword = await auth.compareHash(authBody.password);
+  Unauthorized.assert(isCorrectPassword, 'Incorrect password or unknown email');
+  Unauthorized.assert(auth.active && auth.user.active, 'User or Auth method not active');
+  const { token } = await AuthToken.createForUser(auth.user);
+  ctx.body = {
+    status: 'ok',
+    token,
+  };
 };
 
 export { emailAuthController };

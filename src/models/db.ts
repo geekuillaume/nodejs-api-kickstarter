@@ -1,5 +1,8 @@
 import {
-  createConnection, Connection, EntityManager, getConnectionOptions,
+  createConnection,
+  Connection,
+  EntityManager, // eslint-disable-line
+  getConnectionOptions,
 } from 'typeorm';
 import { getContext } from '../lib/requestContext';
 

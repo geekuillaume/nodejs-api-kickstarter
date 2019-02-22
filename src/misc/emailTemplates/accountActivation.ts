@@ -1,7 +1,7 @@
 import * as Handlebars from 'handlebars';
-import { emailTemplate } from '../../lib/email';
+import { EmailTemplate } from '../../lib/email';
 
-export const accountActivationTemplate: emailTemplate = {
+export const accountActivationTemplate: EmailTemplate = {
   subject: 'Activate your account',
   html: Handlebars.compile(`
     <h1>Welcome to our service !</h1>

@@ -25,7 +25,7 @@ class EmailAuthBody {
 export const createUserController: Koa.Middleware = async (ctx) => {
   const emailAuthBody = await transformAndValidate(EmailAuthBody, ctx.request.body);
 
-  const { user, authMethod } = await createAuthAndUserIfNecessary({
+  const { user } = await createAuthAndUserIfNecessary({
     type: AuthMethodType.EMAIL,
     email: emailAuthBody.email,
     password: emailAuthBody.password,
@@ -45,6 +45,10 @@ export const createUserController: Koa.Middleware = async (ctx) => {
   //   },
   // };
   ctx.status = 201;
+};
+
+export const getOwnUser: Koa.Middleware = async (ctx) => {
+  ctx.body = ctx.user;
 };
 
 export const activateUserController: Koa.Middleware = async (ctx) => {

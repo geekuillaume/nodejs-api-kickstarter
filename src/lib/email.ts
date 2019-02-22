@@ -4,19 +4,19 @@ import log from './log';
 
 const transport = nodemailer.createTransport(config.get('email.smtp'));
 
-export interface emailTemplate {
+export interface EmailTemplate {
   subject: HandlebarsTemplateDelegate | string;
   html: HandlebarsTemplateDelegate | string;
   text: HandlebarsTemplateDelegate | string;
 }
 
-interface sendEmailParams {
+interface SendEmailParams {
   to: string;
-  template: emailTemplate;
+  template: EmailTemplate;
   variables: object;
 }
 // You can use Handlebars templates with this method for either subject, html or text fields
-export const sendEmail = async ({ to, template, variables }: sendEmailParams) => {
+export const sendEmail = async ({ to, template, variables }: SendEmailParams) => {
   const compiledEmail = {
     subject: typeof template.subject === 'function' ? template.subject(variables) : template.subject,
     html: typeof template.html === 'function' ? template.html(variables) : template.html,

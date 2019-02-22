@@ -8,11 +8,11 @@ import { AuthMethod, AuthMethodType } from './authMethodSchema';
 
 export const getAuth = async (conditions: Partial<AuthMethod>) => {
   const auth = await dbManager()
-    .findOne(AuthMethod, conditions);
+    .findOne(AuthMethod, conditions, { relations: ['user'] });
   return auth;
 };
 
-interface createAuthAndUserIfNecessaryParams {
+interface CreateAuthAndUserIfNecessaryParams {
   type: AuthMethodType;
   email: string;
   password?: string;
@@ -23,7 +23,7 @@ interface createAuthAndUserIfNecessaryParams {
 // use an oauth provider to login
 export const createAuthAndUserIfNecessary = async ({
   type, email, password, active,
-}: createAuthAndUserIfNecessaryParams) => {
+}: CreateAuthAndUserIfNecessaryParams) => {
   let user: User;
   user = await dbManager().findOne(User, { email });
   if (!user) {

@@ -23,9 +23,10 @@ export const initHooks = () => {
 };
 
 type GenericFunction = (...args: any[]) => any;
-export function initContext<T extends GenericFunction>(fn: T): ReturnType<T>;
-export function initContext(): void;
-export function initContext(fn?: any): any {
+
+export function initContext<T extends GenericFunction>(fn: T): ReturnType<T>; // eslint-disable-line
+export function initContext(): void; // eslint-disable-line
+export function initContext(fn?: any): any { // eslint-disable-line
   const asyncId = asyncHooks.executionAsyncId();
   contexts[asyncId] = {};
   if (fn) {
