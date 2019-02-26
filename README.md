@@ -72,21 +72,27 @@ It's meant to be used with a front-end consuming the API like a mobile app or a 
   </tbody>
 </table>
 
+The boilerplate uses:
+
 - [Koa](http://koajs.com/) with async/await code to handle asynchronous tasks
 - [TypeScript](http://www.typescriptlang.org/) for awesome Developer Experience
-- SQL integration with [Knex](http://knexjs.org/)
+- [TypeORM](https://typeorm.io/#/) to manage SQL entities
+- [async_hooks](https://nodejs.org/api/async_hooks.html) to encapsulate each HTTP request in a different SQL transaction
+- [Koa-Router](https://github.com/alexmingoia/koa-router) to separate the logic of each route
+- [Jest](https://facebook.github.io/jest/) for routes testing with watch mode
+- [Eslint](https://eslint.org/) linting with pre-commit test and auto-fixing
+- [Node-Config](https://github.com/lorenwest/node-config) for configuration and environment variable handling
+- [Nodemon](https://github.com/remy/nodemon) to auto-reload your server when saving
+
+And implements for you as an example:
+
 - Email/password account creation API routes
 - Compatibility to add other OAuth providers as login methods and merge of multiple auth providers for a single account
 - Account confirmation with a link sent by email
 - Email sending with your SMTP server (and templating also included)
-- Separated routers with [Koa-Router](https://github.com/alexmingoia/koa-router)
 - Object injection in Koa context when references in the URL (like `/todo/12` injects the Todo object with id 12 in `ctx.todo`)
 - Error middleware with custom error classes and asserts to handle basic errors like Not Found
-- Routes testing with watch mode with [Jest](https://facebook.github.io/jest/)
 - Code coverage
-- [Eslint](https://eslint.org/) linting with pre-commit test and auto-fixing
-- [Node-Config](https://github.com/lorenwest/node-config) for configuration and environment variable handling
-- [Nodemon](https://github.com/remy/nodemon) to auto-reload your server when saving
 - Tricky parts of code fully commented
 - Kubernetes Deployement with PostgreSQL
 - Continuous integration / deployement with CircleCI
@@ -132,21 +138,29 @@ The server comes packed with some useful commands (defined in `package.json`):
 <img src="./misc/images/precommit_eslint.gif">
 
 
-## Customizing it
+## Building unpon it
 
 ### Config
 
 This project uses [node-config](https://github.com/lorenwest/node-config) to handle the different configuration options. I highly recommend you to read this module README to learn about the different ways to configure this project for different environments. The [config/local.js](config/local.js) file should be used for secrets in development.
 
+### Request context
+
+[Async_hooks](https://nodejs.org/api/async_hooks.html) are used to create a "request global context". Everywhere inside your controllers or middleware, you can use the `getContext()` method from [src/lib/asyncContext.ts](src/lib/asyncContext.ts) to access an object specific to each request. It used by the [log](src/lib/log.ts) module to append the unique requestID and the connected userId to each log message. It's also used by the [src/models/db.ts](src/models/db.ts) module to always return the same database transaction wrapper for each SQL query inside the middlewares and controllers.
+
+You can use the `addToLoggerContext()` method to add fields into each log message in the current request context. You can also directly use the `getContext()` method and manipulate the returned context to pass resources in each of your controllers or middlewares.
+
 ### SQL
 
-The SQL integration is made with [Knex](http://knexjs.org/). By default, the PostgreSQL adapter is installed but you can use another, look at the Knex documentation for more [information](http://knexjs.org/#Installation-node).
+The SQL integration is made with [TypeORM](https://typeorm.io/#/). By default, the PostgreSQL adapter is installed but you can use another, look at the [TypeORM documentation](https://typeorm.io/#/) for more information about how to adapt to other SQL databases.
+
+Each request creates a new transaction which is commited just before the response is sent back to the client. If an error is thrown inside one of the controller or middleware, the transaction is rollbacked. This prevent a lot of errors related to invalid database states.
 
 The E2E tests are configured to run in a transaction to allow fast testing. The DB is migrated and seeded at the start of the test so be sure not to run the tests on your production DB.
 
 The SQL conf is located in each file of the [config](config) folder.
 
-Migrations are handled by [Knex migration tool](http://knexjs.org/#Migrations). You can look at the default [todos migration file](migrations/20180327160540_todos.ts) for an example. Migrations are run before running the tests and so the database is wiped clean, be careful to never use you production database when running the tests. To create a new migration, use the `npm run db:createMigration -- YOUR_MIGRATION_NAME` command. It will create a new file in the [migrations/](migrations) folder that you should use to define your migration steps. To run all non executed migrations, use the `npm run db:migrate` command.
+Migrations are handled by [TypeORM migration tool](https://typeorm.io/#/migrations). You can look at the default [migration file](migrations/1550845242331-init.ts) for an example. Migrations are run before running the tests and so the database is wiped clean, be careful to never use you production database when running the tests. To create a new migration, use the `npm run db:createMigration YOUR_MIGRATION_NAME` command. It will look at changes in your entities from the last migration and generate one for you as a new file in the [migrations/](migrations) folder. You should check this file and possibly edit it to define your migration steps. To run all non executed migrations, use the `npm run db:migrate` command.
 
 ### Email
 
