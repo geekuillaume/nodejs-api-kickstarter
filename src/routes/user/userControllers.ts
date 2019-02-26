@@ -38,12 +38,6 @@ export const createUserController: Koa.Middleware = async (ctx) => {
       activationLink: `${config.get('apiAddress')}/user/activate?token=${activationToken}`,
     },
   });
-  // ctx.body = {
-  //   user,
-  //   auth: {
-  //     token: await createToken(user.id),
-  //   },
-  // };
   ctx.status = 201;
 };
 
