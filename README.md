@@ -84,7 +84,7 @@ The boilerplate uses:
 - [Node-Config](https://github.com/lorenwest/node-config) for configuration and environment variable handling
 - [Nodemon](https://github.com/remy/nodemon) to auto-reload your server when saving
 
-And implements for you as an example:
+And includes:
 
 - Email/password account creation API routes
 - Compatibility to add other OAuth providers as login methods and merge of multiple auth providers for a single account
@@ -93,7 +93,7 @@ And implements for you as an example:
 - Object injection in Koa context when references in the URL (like `/todo/12` injects the Todo object with id 12 in `ctx.todo`)
 - Error middleware with custom error classes and asserts to handle basic errors like Not Found
 - Code coverage
-- Tricky parts of code fully commented
+- Full comments of the tricky parts of the code
 - Kubernetes Deployement with PostgreSQL
 - Continuous integration / deployement with CircleCI
 - Separated env on Kubernetes for each branch
