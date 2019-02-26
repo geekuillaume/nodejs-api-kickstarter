@@ -1,11 +1,11 @@
-import { testApi } from '-/lib/testApi';
-import { generateTestUuid, prepareTestDb } from '-/lib/testsHelpers';
-import { sendEmail } from '-/lib/email';
-import { createActivationToken } from '-/lib/authToken';
-import { rollbackGlobalTransaction } from '-/lib/requestContext';
+import { testApi } from '../../lib/testApi';
+import { generateTestUuid, prepareTestDb } from '../../lib/testsHelpers';
+import { sendEmail } from '../../lib/email';
+import { createActivationToken } from '../../lib/authToken';
+import { rollbackGlobalTransaction } from '../../lib/requestContext';
 
 // We are mocking the email module to not send emails in our tests
-jest.mock('-/lib/email');
+jest.mock('../../lib/email');
 
 describe('User', () => {
   beforeAll(prepareTestDb);
@@ -32,13 +32,14 @@ describe('User', () => {
     expect(sendEmail).toHaveBeenCalled();
   });
 
-  it('should activate a user with its token and redirect to the correct url', async () => {
-    await testApi()
+  it('should activate a user with its token and return an auth token', async () => {
+    const { body } = await testApi()
       .get('/user/activate')
       .query({
         token: await createActivationToken(generateTestUuid('user', 16)),
       })
-      .expect(302);
+      .expect(200);
+    expect(body).toHaveProperty('token');
   });
 
   it('should not activate an already active user', async () => {
@@ -92,7 +93,7 @@ describe('User', () => {
       })
       .expect(400);
 
-    expect(body).toHaveProperty('message', 'Validation error');
+    expect(body).toHaveProperty('message', 'Request body is not valid');
   });
 
   it('should not get user if token is invalid', async () => {
@@ -101,7 +102,7 @@ describe('User', () => {
       .set('Authorization', 'Bearer invalidTOKEN')
       .expect(401);
 
-    expect(body).toHaveProperty('message', 'Invalid auth token');
+    expect(body).toHaveProperty('message', 'Invalid authentication token');
   });
 
   it('should get own user if token is valid', async () => {

@@ -1,17 +1,9 @@
-// import * as joi from 'joi';
 import {
   Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
   UpdateDateColumn, Index, OneToMany,
 } from 'typeorm';
+import { dbManager } from '../../models/db';
 import { AuthMethod } from '../authMethod/authMethodSchema';
-
-// export const userSchema = joi.object().keys({
-//   id: joi.string().uuid(),
-//   email: joi.string().email(),
-//   active: joi.boolean()
-//   .notes('A user is active after confirming their email address by clicking
-//   the link sent on registration'),
-// });
 
 @Entity()
 export class User {
@@ -37,4 +29,7 @@ export class User {
 
   @OneToMany(() => AuthMethod, (authMethod) => authMethod.user)
   authMethods: AuthMethod[];
+
+  static getUser = async (userInfo: Partial<User>) => dbManager().findOne(User, userInfo);
+  static activateUser = async ({ id }) => dbManager().update(User, { id }, { active: true })
 }

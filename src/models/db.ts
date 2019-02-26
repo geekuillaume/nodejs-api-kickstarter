@@ -4,7 +4,7 @@ import {
   EntityManager, // eslint-disable-line
   getConnectionOptions,
 } from 'typeorm';
-import { getContext } from '../lib/requestContext';
+import { getContext } from '../lib/asyncContext';
 
 let connection: Connection;
 
@@ -17,31 +17,15 @@ export const migrateDb = async () => {
   await connection.runMigrations();
 };
 
-// These methods are used for testing purposes
-// It allow every db query between a startTransaction and resetTransaction to be rollbacked
-// This will keep the seeded DB in the same state between tests while staying fast
-// export const startTransaction = () => new Promise((resolve) => {
-//   knexInstance.transaction((newTrx) => {
-//     trx = newTrx;
-//     resolve(trx);
-//   }).catch(() => {});
-// });
-// export const resetTransaction = async () => {
-//   if (trx) {
-//     trx.rollback();
-//     trx = null;
-//   }
-// };
-
 // We use transactions here for testing purposes
 // It allows us to rollback queries made to PostgreSQL easily
 // Each test is running in a transaction
+// This will keep the seeded DB in the same state between tests while staying fast
 export const dbManager = () => {
   if (!connection) {
     throw new Error('DB Connection was not initialized properly');
   }
   const asyncContext = getContext();
-  // console.log(asyncContext);
   // if we are in a query, use the entity manager created for the context
   // which is a way to handle a transaction per request
   // else use the global object
@@ -67,5 +51,3 @@ export const initTransaction = async () => {
     manager: queryRunner.manager,
   };
 };
-
-// export const dbInstance = () => knexInstance;

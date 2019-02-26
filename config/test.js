@@ -1,5 +1,7 @@
 module.exports = {
-  consoleLoggerEnabled: false,
+  log: {
+    level: 'fatal',
+  },
   prettyPrintErrors: true,
   db: {
     // be careful as the database is wipped clean on each test suite

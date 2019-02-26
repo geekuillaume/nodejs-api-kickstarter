@@ -1,6 +1,6 @@
-import { testApi, asTestUser } from '-/lib/testApi';
-import { generateTestUuid, prepareTestDb } from '-/lib/testsHelpers';
-import { rollbackGlobalTransaction } from '-/lib/requestContext';
+import { testApi, asTestUser } from '../../lib/testApi';
+import { generateTestUuid, prepareTestDb } from '../../lib/testsHelpers';
+import { rollbackGlobalTransaction } from '../../lib/requestContext';
 
 describe('Todo', () => {
   beforeAll(prepareTestDb);
@@ -33,6 +33,8 @@ describe('Todo', () => {
     expect(body).toEqual({
       error: true,
       message: 'Authentified user required',
+      errcode: 'UNAUTHORIZED',
+      details: {},
       status: 401,
     });
   });
@@ -49,10 +51,9 @@ describe('Todo', () => {
     const { body } = await testApi()
       .get(`/todo/${generateTestUuid('todo', 0)}`)
       .use(asTestUser(1))
-      .expect(401);
+      .expect(404);
     expect(body).toBeInstanceOf(Object);
-    expect(body.status).toBe(401);
-    expect(body.message).toBe('Not creator of this todo');
+    expect(body.status).toBe(404);
   });
 
   it('should return an error when there is no todo with this id', async () => {
@@ -85,6 +86,8 @@ describe('Todo', () => {
       .expect(401);
     expect(body).toEqual({
       error: true,
+      errcode: 'UNAUTHORIZED',
+      details: {},
       message: 'Authentified user required',
       status: 401,
     });
@@ -112,7 +115,7 @@ describe('Todo', () => {
       })
       .expect(400);
     expect(body.error).toBeTruthy();
-    expect(body.message).toBe('Validation error');
+    expect(body.message).toBe('Request body is not valid');
     expect(body.details).toBeDefined();
   });
 

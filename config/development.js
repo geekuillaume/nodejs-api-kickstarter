@@ -1,6 +1,9 @@
 module.exports = {
   prettyPrintErrors: true,
-  loggerLevel: 'debug',
+  log: {
+    level: 'trace',
+    prettyPrint: true,
+  },
   email: {
     testServer: true, // don't forget to add this line to your config/local.js file if you want
     // to get the email preview link on ethereal.email logged in your console

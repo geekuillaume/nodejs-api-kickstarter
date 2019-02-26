@@ -1,9 +1,10 @@
-import * as Koa from 'koa';
+import Koa from 'koa';
 import { startsWith } from 'lodash';
-import * as compose from 'koa-compose';
-import { Unauthorized } from './errors';
+import compose from 'koa-compose';
+import { Unauthorized, InvalidAuthToken } from './errors';
 import { User } from '../models/user/userSchema';
-import { AuthToken } from '-/models/authToken/authTokenSchema';
+import { AuthToken } from '../models/authToken/authTokenSchema';
+import { addToLoggerContext, logger } from './log';
 
 export interface AuthentifiedMiddleware {
   (ctx: Koa.Context, next: () => Promise<any>): any;
@@ -23,8 +24,12 @@ export const injectUser: Koa.Middleware = async (ctx, next) => {
   if (ctx.request.header.authorization && startsWith(ctx.request.header.authorization, 'Bearer ')) {
     const token = ctx.request.header.authorization.slice('Bearer '.length);
     const user = await AuthToken.getUserFromToken(token);
-    Unauthorized.assert(user, 'Invalid auth token');
+    InvalidAuthToken.assert(user);
     ctx.user = user;
+    addToLoggerContext({
+      userId: ctx.user.id,
+    });
+    logger.debug('authentified user');
   }
   return next();
 };
@@ -32,7 +37,7 @@ export const injectUser: Koa.Middleware = async (ctx, next) => {
 export const requireAuthentified = compose([
   injectUser,
   async (ctx, next) => {
-    Unauthorized.assert(ctx.user, 'Authentified user required');
+    Unauthorized.assert(ctx.user, { message: 'Authentified user required' });
     return next();
   },
 ]);

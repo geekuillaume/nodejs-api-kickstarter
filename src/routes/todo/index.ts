@@ -1,5 +1,5 @@
-import * as Router from 'koa-router';
-import { requireAuthentified } from '-/lib/authMiddleware';
+import Router from 'koa-router';
+import { requireAuthentified } from '../../lib/authMiddleware';
 import { listTodosController, getTodoController, createTodoController } from './todoControllers';
 import { todoMiddleware } from './todoMiddleware';
 

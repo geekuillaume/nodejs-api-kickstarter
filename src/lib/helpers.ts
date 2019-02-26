@@ -2,7 +2,9 @@ import { ValidatorOptions, validate } from 'class-validator';
 import { plainToClass, ClassTransformOptions } from 'class-transformer';
 import { randomBytes } from 'crypto';
 import { DateTime } from 'luxon';
-import { BadRequest } from './errors';
+import asyncHooks from 'async_hooks';
+
+import { ValidationError } from './errors';
 
 export const isUUID = (str) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(str);
 
@@ -27,7 +29,7 @@ export async function transformAndValidate<T extends object>(
   const classObject = plainToClass(classType, object, options.transformer);
   const errors = await validate(classObject, validationOptions);
   if (errors.length !== 0) {
-    throw new BadRequest('Validation error', errors);
+    throw new ValidationError({ details: errors });
   }
   return classObject;
 }

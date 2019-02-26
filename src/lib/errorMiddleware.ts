@@ -1,19 +1,20 @@
-import * as Koa from 'koa';
-import * as config from 'config';
+import Koa from 'koa';
+import config from 'config';
 import { ValidationError } from 'class-validator';
-import { CustomError, prettyPrintError } from './errors';
-import logger from './log';
+import { BaseHttpError, prettyPrintError } from './errors';
+import { logger } from './log';
 
 const errorMiddleware: Koa.Middleware = async (ctx, next) => {
   try {
     await next();
   } catch (e) {
-    if (e instanceof CustomError) {
+    if (e instanceof BaseHttpError) {
       // We caught an error we throwed ourself
       ctx.status = e.status;
       ctx.body = {
         error: true,
         status: e.status,
+        errcode: e.errcode,
         message: e.message,
         details: e.details,
       };
@@ -21,6 +22,7 @@ const errorMiddleware: Koa.Middleware = async (ctx, next) => {
       ctx.status = 400;
       ctx.body = {
         error: true,
+        errcode: 'VALIDATION_ERROR',
         status: 400,
         message: 'Validation error',
         details: e,

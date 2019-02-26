@@ -1,6 +1,6 @@
-import * as nodemailer from 'nodemailer';
-import * as config from 'config';
-import log from './log';
+import nodemailer from 'nodemailer';
+import config from 'config';
+import { logger } from './log';
 
 const transport = nodemailer.createTransport(config.get('email.smtp'));
 
@@ -30,6 +30,6 @@ export const sendEmail = async ({ to, template, variables }: SendEmailParams) =>
     html: compiledEmail.html,
   });
   if (config.get('email.testServer')) {
-    log.info(`Sent email to ${to}, preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    logger.info(`Sent email to ${to}, preview URL: ${nodemailer.getTestMessageUrl(info)}`);
   }
 };

@@ -1,37 +1,47 @@
-import * as Koa from 'koa';
-import * as koaBody from 'koa-body';
-import * as koaLogger from 'koa-logger';
-import * as cors from '@koa/cors';
-
 // needed for typeorm
 import 'reflect-metadata';
 
+import Koa from 'koa';
+import koaBody from 'koa-body';
+import cors from '@koa/cors';
+import koaPinoLogger from 'koa-pino-logger';
+
+import {
+  initHooks, initContext, getContext,
+} from './lib/asyncContext';
 import router from './routes/index';
 import { errorMiddleware } from './lib/errorMiddleware';
-import logger from './lib/log';
-import {
-  initHooks, initContext, attachRequestContext, getContext,
-} from './lib/requestContext';
+import { pinoOptions } from './lib/log';
+import { injectUser } from './lib/authMiddleware';
+import { attachRequestContext } from './lib/requestContext';
 
+// We are creating a root context object for call to
+// log / db / other not done from inside a HTTP request
 initHooks();
 initContext();
 const rootContext = getContext();
 rootContext.level = 'root';
 
 const app = new Koa();
-
+app.use(errorMiddleware);
+// the attachRequestContext creates a new asyncContext and wraps the request in a new DB transaction
+// the transaction is rollbacked if an error is thrown during the request lifecycle
+// every call to the database will be executed in this transaction and
+// every log call will contain a unique request id
 app.use(attachRequestContext);
 
-app.use(koaLogger((str) => {
-  logger.debug(str);
-}));
+app.use(koaPinoLogger(pinoOptions));
 
 app.use(cors());
 // There is some default limits on the size of each type of body
 // look at the documentation for more info https://github.com/dlau/koa-body
 app.use(koaBody());
-app.use(errorMiddleware);
 
+// we check if an Authorization header is present, if so, we fetch the user from the db
+// and add it to the request context
+app.use(injectUser);
+
+// finally we execute the controllers for each routes
 app.use(router.routes());
 app.use(router.allowedMethods());
 

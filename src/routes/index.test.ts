@@ -1,5 +1,5 @@
-import { testApi } from '-/lib/testApi';
-import { prepareTestDb } from '-/lib/testsHelpers';
+import { testApi } from '../lib/testApi';
+import { prepareTestDb } from '../lib/testsHelpers';
 
 describe('Healthcheck', () => {
   beforeAll(prepareTestDb);

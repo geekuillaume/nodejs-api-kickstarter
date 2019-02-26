@@ -1,4 +1,4 @@
-import * as faker from 'faker';
+import faker from 'faker';
 import { Todo } from './todoSchema';
 import { dbManager } from '../db';
 import { generateTestUuid } from '../../lib/testsHelpers';

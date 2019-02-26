@@ -3,6 +3,7 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { MinLength, IsDefined } from 'class-validator';
+import { dbManager } from '../../models/db';
 import { User } from '../user/userSchema';
 
 // this schema is what's accepted by the API when creating/updating a TODO
@@ -40,4 +41,9 @@ export class Todo {
   @Exclude({ toClassOnly: true })
   @ManyToOne(() => User)
   creator: User;
+
+  static getTodo = async (id: string) => dbManager().findOne(Todo, id)
+  static getTodosOfUser = async (userId: string) => dbManager().find(Todo, {
+    creatorId: userId,
+  })
 }

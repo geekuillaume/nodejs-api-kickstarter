@@ -1,10 +1,10 @@
 import {
   Entity, ManyToOne, PrimaryColumn, CreateDateColumn, Column,
 } from 'typeorm';
-import { User } from '-/models/user/userSchema';
 import { DateTime } from 'luxon';
+import { User } from '../../models/user/userSchema';
 import { dbManager } from '../db';
-import { generateToken, columnAsLuxonDateTime } from '-/lib/helpers';
+import { generateToken, columnAsLuxonDateTime } from '../../lib/helpers';
 
 @Entity()
 export class AuthToken {

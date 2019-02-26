@@ -1,4 +1,4 @@
-import * as faker from 'faker';
+import faker from 'faker';
 import { dbManager } from '../db';
 import { hash } from '../../lib/hash';
 import { generateTestUuid } from '../../lib/testsHelpers';

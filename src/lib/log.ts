@@ -1,27 +1,31 @@
-import * as Winston from 'winston';
-import * as config from 'config';
+import pino from 'pino';
+import config from 'config';
+import asyncHooks from 'async_hooks';
+import { getContext } from './asyncContext';
 
-const logger: Winston.Logger = Winston.createLogger({
-  level: config.get('loggerLevel'),
-  format: Winston.format.json(),
-  transports: [
-    //
-    // - Write to all logs with level `info` and below to `combined.log`
-    // - Write all logs error (and below) to `error.log`.
-    //
-    new Winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new Winston.transports.File({ filename: 'combined.log' }),
-  ],
-});
+export const pinoOptions = {
+  level: config.get('log.level'),
+  prettyPrint: config.get('log.prettyPrint'),
+  serializers: {
+    [Symbol.for('pino.*')]: (obj) => {
+      const context = getContext();
+      if (context.loggerBase) {
+        Object.assign(obj, context.loggerBase);
+      }
+      return obj;
+    },
+  },
+};
 
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-//
-if (config.get('consoleLoggerEnabled')) {
-  logger.add(new Winston.transports.Console({
-    format: Winston.format.simple(),
-  }));
-}
+export const logger = pino(pinoOptions as any);
 
-export default logger;
+export const addToLoggerContext = (contextInfo: {}) => {
+  const context = getContext();
+  if (!context.loggerBase) {
+    context.loggerBase = {};
+  }
+  context.loggerBase = {
+    ...context.loggerBase,
+    ...contextInfo,
+  };
+};

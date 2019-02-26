@@ -1,9 +1,11 @@
-import * as swaggerJSDoc from 'swagger-jsdoc';
-import * as glob from 'glob';
-import * as j2s from 'joi-to-swagger';
+import swaggerJSDoc from 'swagger-jsdoc';
+import glob from 'glob';
+import j2s from 'joi-to-swagger';
 import { join } from 'path';
-import { assign, mapKeys, mapValues, merge, pickBy } from 'lodash';
-import * as spectacle from 'spectacle-docs';
+import {
+  assign, mapKeys, mapValues, merge, pickBy,
+} from 'lodash';
+import spectacle from 'spectacle-docs';
 import { writeFileSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
 

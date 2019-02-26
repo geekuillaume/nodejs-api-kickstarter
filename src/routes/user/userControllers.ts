@@ -1,17 +1,17 @@
-import * as Koa from 'koa';
-import * as config from 'config';
+import Koa from 'koa';
+import config from 'config';
 import { IsEmail, MinLength } from 'class-validator';
 
-import { BadRequest, NotFound } from '-/lib/errors';
-import { createAuthAndUserIfNecessary } from '-/models/authMethod/authMethodModel';
-import { getUser, activateUser } from '-/models/user/userModel';
-import { createToken, createActivationToken, getUserIdFromActivationToken } from '-/lib/authToken';
-import { sendEmail } from '-/lib/email';
-import { accountActivationTemplate } from '-/misc/emailTemplates/accountActivation';
-import { transformAndValidate } from '-/lib/helpers';
-import { AuthMethodType } from '-/models/authMethod/authMethodSchema';
 import { Transform } from 'class-transformer';
 import { toLower } from 'lodash';
+import { BadRequest, NotFound } from '../../lib/errors';
+import { createActivationToken, getUserIdFromActivationToken } from '../../lib/authToken';
+import { sendEmail } from '../../lib/email';
+import { accountActivationTemplate } from '../../misc/emailTemplates/accountActivation';
+import { transformAndValidate } from '../../lib/helpers';
+import { AuthMethodType, AuthMethod } from '../../models/authMethod/authMethodSchema';
+import { AuthToken } from '../../models/authToken/authTokenSchema';
+import { User } from '../../models/user/userSchema';
 
 class EmailAuthBody {
   @Transform(toLower, { toClassOnly: true })
@@ -25,7 +25,7 @@ class EmailAuthBody {
 export const createUserController: Koa.Middleware = async (ctx) => {
   const emailAuthBody = await transformAndValidate(EmailAuthBody, ctx.request.body);
 
-  const { user } = await createAuthAndUserIfNecessary({
+  const { user } = await AuthMethod.createAuthAndUserIfNecessary({
     type: AuthMethodType.EMAIL,
     email: emailAuthBody.email,
     password: emailAuthBody.password,
@@ -51,12 +51,20 @@ export const getOwnUser: Koa.Middleware = async (ctx) => {
   ctx.body = ctx.user;
 };
 
+const UserAlreadyActiveError = BadRequest.extend({
+  errcode: 'ALREADY_ACTIVE',
+  message: 'User is already active',
+});
+
 export const activateUserController: Koa.Middleware = async (ctx) => {
-  BadRequest.assert(typeof ctx.request.query.token === 'string', 'token in query string must be a string');
+  BadRequest.assert(typeof ctx.request.query.token === 'string', { message: 'token in query string must be a string' });
   const userId = await getUserIdFromActivationToken(ctx.request.query.token);
-  const user = await getUser({ id: userId });
-  NotFound.assert(user, 'Unknown user');
-  BadRequest.assert(!user.active, 'User is already active');
-  await activateUser({ id: userId });
-  ctx.redirect(`${config.get('activateCallbackUrl')}?auth_token=${await createToken(user.id)}`);
+  const user = await User.getUser({ id: userId });
+  NotFound.assert(user, { message: 'Unknown user' });
+  UserAlreadyActiveError.assert(!user.active);
+  await User.activateUser({ id: userId });
+  ctx.body = {
+    message: 'activated',
+    token: (await AuthToken.createForUser(user)).token,
+  };
 };

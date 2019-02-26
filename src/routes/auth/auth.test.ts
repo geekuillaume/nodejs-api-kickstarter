@@ -1,6 +1,6 @@
-import { testApi } from '-/lib/testApi';
-import { prepareTestDb } from '-/lib/testsHelpers';
-import { rollbackGlobalTransaction } from '-/lib/requestContext';
+import { testApi } from '../../lib/testApi';
+import { prepareTestDb } from '../../lib/testsHelpers';
+import { rollbackGlobalTransaction } from '../../lib/requestContext';
 
 describe('Auth', () => {
   beforeAll(prepareTestDb);
@@ -32,7 +32,7 @@ describe('Auth', () => {
       .expect(401);
 
     expect(body).toBeInstanceOf(Object);
-    expect(body.message).toBe('Incorrect password or unknown email');
+    expect(body.message).toBe('Auth credentials are not valid: unknown user or incorrect password');
   });
 
   it('should return a 401 when password is incorrect', async () => {
@@ -45,7 +45,7 @@ describe('Auth', () => {
       .expect(401);
 
     expect(body).toBeInstanceOf(Object);
-    expect(body.message).toBe('Incorrect password or unknown email');
+    expect(body.message).toBe('Auth credentials are not valid: unknown user or incorrect password');
   });
 
   it('should return a 400 when email is not specified', async () => {
@@ -57,7 +57,7 @@ describe('Auth', () => {
       .expect(400);
 
     expect(body).toBeInstanceOf(Object);
-    expect(body.message).toBe('Validation error');
+    expect(body.message).toBe('Request body is not valid');
   });
 
   it('should return a 400 when password is not specified', async () => {
@@ -69,6 +69,6 @@ describe('Auth', () => {
       .expect(400);
 
     expect(body).toBeInstanceOf(Object);
-    expect(body.message).toBe('Validation error');
+    expect(body.message).toBe('Request body is not valid');
   });
 });

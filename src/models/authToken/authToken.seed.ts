@@ -1,4 +1,4 @@
-import * as faker from 'faker';
+import faker from 'faker';
 import { DateTime } from 'luxon';
 import { dbManager } from '../db';
 import { getSeededUsers } from '../user/user.seed';

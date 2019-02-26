@@ -1,12 +1,11 @@
-import * as Koa from 'koa';
+import Koa from 'koa';
 import { IRouterContext } from 'koa-router';
-import { Todo } from '-/models/todos/todoSchema';
-import { getTodosOfUser } from '-/models/todos/todosModel';
-import { dbManager } from '-/models/db';
-import { transformAndValidate } from '-/lib/helpers';
+import { Todo } from '../../models/todos/todoSchema';
+import { dbManager } from '../../models/db';
+import { transformAndValidate } from '../../lib/helpers';
 
 export const listTodosController = async (ctx: IRouterContext) => {
-  const todos = await getTodosOfUser(ctx.user.id);
+  const todos = await Todo.getTodosOfUser(ctx.user.id);
   ctx.body = todos;
 };
 

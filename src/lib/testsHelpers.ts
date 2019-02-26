@@ -1,7 +1,7 @@
-import * as config from 'config';
-import * as uuidv5 from 'uuid/v5';
-import { migrateDb, initConnection } from '-/models/db';
-import { seedDb } from '-/models/seed';
+import config from 'config';
+import uuidv5 from 'uuid/v5';
+import { migrateDb, initConnection } from '../models/db';
+import { seedDb } from '../models/seed';
 
 export const prepareTestDb = async () => {
   await initConnection();

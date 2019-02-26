@@ -1,13 +1,12 @@
-import * as Koa from 'koa';
+import Koa from 'koa';
 import { Transform } from 'class-transformer';
 import { IsEmail, IsString } from 'class-validator';
 import { toLower } from 'lodash';
 
 import { Unauthorized } from '../../lib/errors';
-import { transformAndValidate } from '-/lib/helpers';
-import { AuthMethodType } from '-/models/authMethod/authMethodSchema';
-import { getAuth } from '-/models/authMethod/authMethodModel';
-import { AuthToken } from '-/models/authToken/authTokenSchema';
+import { transformAndValidate } from '../../lib/helpers';
+import { AuthMethodType, AuthMethod } from '../../models/authMethod/authMethodSchema';
+import { AuthToken } from '../../models/authToken/authTokenSchema';
 
 class EmailAuthInput {
   @IsEmail()
@@ -18,18 +17,27 @@ class EmailAuthInput {
   password: string;
 }
 
+const InvalidAuthError = Unauthorized.extend({
+  errcode: 'INVALID_AUTH_CREDENTIALS',
+  message: 'Auth credentials are not valid: unknown user or incorrect password',
+});
+const UserNotActivatedError = Unauthorized.extend({
+  errcode: 'INACTIVE_USER',
+  message: 'User is not activated, activate it first',
+});
+
 const emailAuthController: Koa.Middleware = async (ctx) => {
   const authBody = await transformAndValidate(EmailAuthInput, ctx.request.body);
 
-  const auth = await getAuth({
+  const auth = await AuthMethod.getAuth({
     type: AuthMethodType.EMAIL,
     email: authBody.email,
   });
   // not exposing if email is registered or not
-  Unauthorized.assert(auth, 'Incorrect password or unknown email');
+  InvalidAuthError.assert(auth);
   const isCorrectPassword = await auth.compareHash(authBody.password);
-  Unauthorized.assert(isCorrectPassword, 'Incorrect password or unknown email');
-  Unauthorized.assert(auth.active && auth.user.active, 'User or Auth method not active');
+  InvalidAuthError.assert(isCorrectPassword);
+  UserNotActivatedError.assert(auth.active && auth.user.active);
   const { token } = await AuthToken.createForUser(auth.user);
   ctx.body = {
     status: 'ok',

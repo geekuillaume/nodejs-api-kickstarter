@@ -1,8 +1,9 @@
 import {
   Entity, PrimaryGeneratedColumn, ManyToOne, Column,
 } from 'typeorm';
-import { User } from '-/models/user/userSchema';
-import { hash, compare } from '-/lib/hash';
+import { dbManager } from '../../models/db';
+import { User } from '../../models/user/userSchema';
+import { hash, compare } from '../../lib/hash';
 
 export enum AuthMethodType {
   EMAIL = 'email',
@@ -43,4 +44,38 @@ export class AuthMethod {
   async compareHash(val: string) {
     return compare(val, this.hashedPassword);
   }
+
+  static getAuth = async (conditions: Partial<AuthMethod>) => dbManager()
+    .findOne(AuthMethod, conditions, { relations: ['user'] });
+
+  static createAuthAndUserIfNecessary = async ({
+    type, email, password, active,
+  }: CreateAuthAndUserIfNecessaryParams) => {
+    let user: User;
+    user = await dbManager().findOne(User, { email });
+    if (!user) {
+      user = dbManager().create(User, { email });
+      await dbManager().save(user);
+    }
+    const authMethod = dbManager().create(AuthMethod, {
+      type,
+      email,
+      active,
+      user,
+    });
+    authMethod.password = password;
+    await dbManager().save(authMethod);
+    return {
+      user,
+      authMethod,
+    };
+  }
+}
+
+
+interface CreateAuthAndUserIfNecessaryParams {
+  type: AuthMethodType;
+  email: string;
+  password?: string;
+  active?: boolean;
 }
