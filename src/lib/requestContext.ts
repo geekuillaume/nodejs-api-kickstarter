@@ -1,6 +1,5 @@
 import { Context } from 'koa';
 import config from 'config';
-import asyncHooks from 'async_hooks';
 
 import { initTransaction } from '../models/db';
 import { ThenArg, generateToken } from '../lib/helpers';
@@ -17,28 +16,28 @@ export const attachRequestContext = async (ctx: Context, next: () => Promise<any
     addToLoggerContext({
       requestId: await generateToken(),
     });
-    let transaction: typeof globalTransaction;
-    if (config.get('testMode')) {
-      if (!globalTransaction) {
-        globalTransaction = await initTransaction();
-      }
-      transaction = globalTransaction;
-    } else {
-      transaction = await initTransaction();
+
+    // If we are in testMode, we don't want a transaction per request but
+    // instead a transaction per test-case (as a test case can have multiple request)
+    if (config.get('testMode') && !globalTransaction) {
+      globalTransaction = await initTransaction();
     }
+    const transaction = config.get('testMode') ? globalTransaction : await initTransaction();
 
     asyncContext.entityManager = transaction.manager;
     try {
       await next();
+      // we don't commit the transaction if we are running in test mode
+      // it's the responsability of the test runner to call rollbackGlobalTransaction()
+      // when the test case is over
       if (!config.get('testMode')) {
         await transaction.commit();
       }
     } catch (e) {
-      // we throw original error even if rollback thrown an error
+      // we throw original error even if rollback throws an error
       try {
-        if (!config.get('testMode')) {
-          await transaction.rollback();
-        }
+        await transaction.rollback();
+        globalTransaction = undefined;
       } catch (rollbackErr) {}
       throw e;
     }
@@ -49,8 +48,9 @@ export const rollbackGlobalTransaction = async () => {
   if (!config.get('testMode')) {
     throw new Error('Must be in test mode (testMode: true in config)');
   }
-  if (globalTransaction) {
-    globalTransaction.rollback();
+  if (!globalTransaction) {
+    return;
   }
+  await globalTransaction.rollback();
   globalTransaction = undefined;
 };

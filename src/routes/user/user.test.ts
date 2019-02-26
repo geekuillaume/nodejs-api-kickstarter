@@ -9,9 +9,7 @@ jest.mock('../../lib/email');
 
 describe('User', () => {
   beforeAll(prepareTestDb);
-  afterEach(async () => {
-    await rollbackGlobalTransaction();
-  });
+  afterEach(rollbackGlobalTransaction);
 
   it('should create an account with email, password', async () => {
     const { body } = await testApi()

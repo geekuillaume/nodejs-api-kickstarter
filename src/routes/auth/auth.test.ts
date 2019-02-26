@@ -4,9 +4,7 @@ import { rollbackGlobalTransaction } from '../../lib/requestContext';
 
 describe('Auth', () => {
   beforeAll(prepareTestDb);
-  afterEach(async () => {
-    await rollbackGlobalTransaction();
-  });
+  afterEach(rollbackGlobalTransaction);
 
   it('should return a token when authenticating with email', async () => {
     const { body } = await testApi()

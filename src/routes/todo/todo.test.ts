@@ -4,9 +4,7 @@ import { rollbackGlobalTransaction } from '../../lib/requestContext';
 
 describe('Todo', () => {
   beforeAll(prepareTestDb);
-  afterEach(async () => {
-    await rollbackGlobalTransaction();
-  });
+  afterEach(rollbackGlobalTransaction);
 
   it('should return the list of all todos for user', async () => {
     // The testApi is a supertest instance

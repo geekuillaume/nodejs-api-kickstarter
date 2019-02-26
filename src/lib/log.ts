@@ -1,6 +1,5 @@
 import pino from 'pino';
 import config from 'config';
-import asyncHooks from 'async_hooks';
 import { getContext } from './asyncContext';
 
 export const pinoOptions = {
