@@ -5,12 +5,24 @@ import {
   getConnectionOptions,
 } from 'typeorm';
 import { getContext } from '../lib/asyncContext';
+import { User } from './user/userSchema';
+import { Todo } from './todos/todoSchema';
+import { AuthToken } from './authToken/authTokenSchema';
+import { AuthMethod } from './authMethod/authMethodSchema';
 
 let connection: Connection;
 
 export const initConnection = async () => {
   const connectionOptions = await getConnectionOptions();
-  connection = await createConnection(connectionOptions);
+  connection = await createConnection({
+    ...connectionOptions,
+    entities: [
+      User,
+      Todo,
+      AuthToken,
+      AuthMethod,
+    ],
+  });
 };
 
 export const migrateDb = async () => {
