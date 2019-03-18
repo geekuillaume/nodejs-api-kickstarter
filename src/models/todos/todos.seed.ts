@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { Todo } from './todoSchema';
 import { dbManager } from '../db';
-import { generateTestUuid } from '../../lib/testsHelpers';
+import { generateTestUuid } from '../../lib/testHelpers';
 import { getSeededUsers } from '../user/user.seed';
 
 export const getSeededTodos = () => {

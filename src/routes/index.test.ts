@@ -1,9 +1,8 @@
-import { testApi } from '../lib/testApi';
-import { prepareTestDb } from '../lib/testsHelpers';
+import { prepareForTests, testApi } from '../lib/testHelpers';
 import { rollbackGlobalTransaction } from '../lib/requestContext';
 
 describe('Healthcheck', () => {
-  beforeAll(prepareTestDb);
+  beforeAll(prepareForTests);
   afterEach(rollbackGlobalTransaction);
 
   it('should respond with 200 for a basic healthcheck on /healthz', async () => {

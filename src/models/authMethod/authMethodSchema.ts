@@ -9,7 +9,9 @@ export enum AuthMethodType {
   EMAIL = 'email',
 }
 
-@Entity()
+@Entity({
+  schema: 'api_private',
+})
 export class AuthMethod {
   @PrimaryGeneratedColumn('uuid')
   id: string;

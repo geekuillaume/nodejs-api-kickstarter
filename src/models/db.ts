@@ -12,6 +12,14 @@ import { AuthMethod } from './authMethod/authMethodSchema';
 
 let connection: Connection;
 
+export const getPgOptions = async () => {
+  const connectionOptions = await getConnectionOptions() as any;
+  return {
+    ...connectionOptions,
+    user: connectionOptions.username,
+  };
+};
+
 export const initConnection = async () => {
   const connectionOptions = await getConnectionOptions();
   connection = await createConnection({
@@ -23,6 +31,10 @@ export const initConnection = async () => {
       AuthMethod,
     ],
   });
+};
+
+export const getPgPool = async () => {
+  return connection.driver.obtainMasterConnection();
 };
 
 export const migrateDb = async () => {

@@ -1,4 +1,5 @@
 module.exports = {
+  devMode: true,
   port: 5000,
   consoleLoggerEnabled: true,
   prettyPrintErrors: false,

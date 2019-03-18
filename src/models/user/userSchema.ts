@@ -5,7 +5,11 @@ import {
 import { dbManager } from '../../models/db';
 import { AuthMethod } from '../authMethod/authMethodSchema';
 
-@Entity()
+@Entity({
+  // nedeed because "user" table on postgres is special
+  name: 'users',
+  schema: 'api_public',
+})
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;

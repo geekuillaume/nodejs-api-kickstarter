@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { dbManager } from '../db';
 import { hash } from '../../lib/hash';
-import { generateTestUuid } from '../../lib/testsHelpers';
+import { generateTestUuid } from '../../lib/testHelpers';
 import { AuthMethodType, AuthMethod } from './authMethodSchema';
 import { getSeededUsers } from '../user/user.seed';
 

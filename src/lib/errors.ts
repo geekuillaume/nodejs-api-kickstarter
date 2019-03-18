@@ -1,4 +1,5 @@
 import PrettyError from 'pretty-error';
+// import { ApolloError } from 'apollo-server-koa';
 
 interface ErrorOptions {
   status?: number;
@@ -13,6 +14,7 @@ export class BaseHttpError extends Error {
   static message = 'An unknown error has occured';
   static details = {};
 
+  extensions: Record<string, any>;
   status: number;
   errcode: string;
   message: string;
@@ -21,11 +23,14 @@ export class BaseHttpError extends Error {
   constructor({
     status = 500, errcode = 'UNKNOWN_ERROR', message = 'An unknown error has occured', details = {},
   } = {}) {
-    super();
+    super(message);
     this.status = status;
     this.errcode = errcode;
     this.message = message;
     this.details = details;
+
+    // extensions are for graphql only
+    this.extensions = { code: errcode, ...details };
   }
 
   static assert(test: any, options?: ErrorOptions) {

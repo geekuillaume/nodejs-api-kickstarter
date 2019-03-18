@@ -8,7 +8,15 @@ module.exports = {
         "import/no-unresolved": 0, // because typescript already check for it
         "import/extensions": 0,
         "import/prefer-default-export": 0,
-        "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts", "**/testApi.ts", '**/*.seed.ts', 'misc/**/*.ts'] }],
+        "import/no-extraneous-dependencies": ["error", {
+            "devDependencies": [
+                "**/*.test.ts",
+                "**/testApi.ts",
+                '**/*.seed.ts',
+                'src/lib/testHelpers.ts',
+                'misc/**/*.ts'
+            ]
+        }],
         "arrow-body-style": 0,
         "max-len": ["error", { "ignoreComments": true, "code": 120 }],
         "no-empty": ["error", {"allowEmptyCatch": true}],
@@ -16,7 +24,8 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": 0,
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/explicit-member-accessibility": 0,
-        "lines-between-class-members": 0
+        "lines-between-class-members": 0,
+        "class-methods-use-this": 0,
     },
     "plugins": [
         "@typescript-eslint",

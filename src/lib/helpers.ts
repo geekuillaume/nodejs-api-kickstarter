@@ -2,7 +2,6 @@ import { ValidatorOptions, validate } from 'class-validator';
 import { plainToClass, ClassTransformOptions } from 'class-transformer';
 import { randomBytes } from 'crypto';
 import { DateTime } from 'luxon';
-import asyncHooks from 'async_hooks';
 
 import { ValidationError } from './errors';
 
@@ -60,4 +59,10 @@ export const columnAsLuxonDateTime = {
       return value.toSQL();
     },
   },
+};
+
+export const koaMiddlewareToGraphql = (middleware) => {
+  return ({ context }, next) => {
+    return middleware(context, next);
+  };
 };

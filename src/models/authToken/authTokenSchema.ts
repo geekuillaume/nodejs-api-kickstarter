@@ -6,7 +6,9 @@ import { User } from '../../models/user/userSchema';
 import { dbManager } from '../db';
 import { generateToken, columnAsLuxonDateTime } from '../../lib/helpers';
 
-@Entity()
+@Entity({
+  schema: 'api_private',
+})
 export class AuthToken {
   @PrimaryColumn()
   token: string;

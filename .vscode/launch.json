@@ -5,9 +5,9 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/src/index.ts",
+      "program": "${workspaceFolder}/dist/src/index.js",
       "preLaunchTask": "tsc: build - tsconfig.json",
-      "env": {"NODE_ENV": "production"},
+      "env": {"NODE_ENV": "development", "FORCE_JS": "true"},
       "outFiles": [
           "${workspaceFolder}/dist/**/*.js"
       ]

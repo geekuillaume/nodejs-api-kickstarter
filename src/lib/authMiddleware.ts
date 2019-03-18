@@ -1,6 +1,5 @@
 import Koa from 'koa';
 import { startsWith } from 'lodash';
-import compose from 'koa-compose';
 import { Unauthorized, InvalidAuthToken } from './errors';
 import { User } from '../models/user/userSchema';
 import { AuthToken } from '../models/authToken/authTokenSchema';
@@ -34,10 +33,7 @@ export const injectUser: Koa.Middleware = async (ctx, next) => {
   return next();
 };
 
-export const requireAuthentified = compose([
-  injectUser,
-  async (ctx, next) => {
-    Unauthorized.assert(ctx.user, { message: 'Authentified user required' });
-    return next();
-  },
-]);
+export const requireAuthentified = (ctx, next) => {
+  Unauthorized.assert(ctx.user, { message: 'Authentified user required' });
+  return next();
+};

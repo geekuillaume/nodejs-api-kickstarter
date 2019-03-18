@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "target": "esnext",
+    "target": "es2018",
     "noImplicitAny": false,
     "module": "commonjs",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "pretty": true,
     "baseUrl": "src/",
