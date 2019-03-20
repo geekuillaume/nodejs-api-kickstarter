@@ -4,6 +4,7 @@ import { Context } from 'koa';
 
 import { getPgOptions } from '../../models/db';
 import { authenticateExtension } from './extensions/authenticate';
+import { healthcheckExtension } from './extensions/healthcheck';
 
 export const attachGraphql = async (app) => {
   const pgql = postgraphile(await getPgOptions(), 'api_public', {
@@ -14,6 +15,7 @@ export const attachGraphql = async (app) => {
     appendPlugins: [
       PgSimplifyInflectorPlugin,
       authenticateExtension,
+      healthcheckExtension,
     ],
     pgSettings: async (ctx) => {
       // eslint-disable-next-line no-underscore-dangle
