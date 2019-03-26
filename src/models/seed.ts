@@ -1,8 +1,13 @@
+import { dbManager } from './db';
+
 import { getSeededTodos } from './todos/todos.seed';
 import { getSeededUsers } from './user/user.seed';
 import { getSeededAuthMethods } from './authMethod/authMethod.seed';
-import { dbManager } from './db';
 import { getSeededAuthTokens } from './authToken/authToken.seed';
+import { getSeededTeams } from './team/teamSchema.seed';
+import { getSeededSubscriptionPlans } from './subscriptionPlan/subscriptionPlan.seed';
+import { getSeededTeamSubscriptions } from './teamSubscription/teamSubscription.seed';
+import { getSeededMembership } from './membership/membership.seed';
 
 const seedDb = async () => {
   await dbManager().save([
@@ -10,6 +15,10 @@ const seedDb = async () => {
     ...(await getSeededAuthMethods()),
     ...(await getSeededAuthTokens()),
     ...getSeededTodos(),
+    ...getSeededTeams(),
+    ...getSeededSubscriptionPlans(),
+    ...getSeededTeamSubscriptions(),
+    ...getSeededMembership(),
   ]);
 };
 

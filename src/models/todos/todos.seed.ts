@@ -1,10 +1,12 @@
 import faker from 'faker';
+import { memoize } from 'lodash';
+
 import { Todo } from './todoSchema';
 import { dbManager } from '../db';
 import { generateTestUuid } from '../../lib/testHelpers';
 import { getSeededUsers } from '../user/user.seed';
 
-export const getSeededTodos = () => {
+export const getSeededTodos = memoize(() => {
   const users = getSeededUsers();
   // We seed the faker lib to always get the same data in our databases during our tests
   faker.seed(1);
@@ -15,4 +17,4 @@ export const getSeededTodos = () => {
     comment: faker.random.words(4),
     creator: users[Math.floor(i / 10)],
   }));
-};
+});

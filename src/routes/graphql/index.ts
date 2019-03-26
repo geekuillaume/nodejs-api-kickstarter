@@ -13,10 +13,12 @@ const { ONLY_BUILD_CACHE } = process.env;
 
 export const attachGraphql = async (app) => {
   const pgql = postgraphile(await getPgOptions(), 'api_public', {
-    ignoreRBAC: true,
+    ignoreRBAC: false,
+    ignoreIndexes: false,
     dynamicJson: true,
-    graphiql: true,
-    enhanceGraphiql: true,
+    showErrorStack: config.get('devMode'),
+    graphiql: config.get('devMode'),
+    enhanceGraphiql: config.get('devMode'),
     exportJsonSchemaPath: resolve(__dirname, '../../misc/postgraphileSchema.json'),
     exportGqlSchemaPath: resolve(__dirname, '../../misc/postgraphileSchema.gql'),
     writeCache: ONLY_BUILD_CACHE && resolve(__dirname, '../../misc/postgraphileCache.json'),

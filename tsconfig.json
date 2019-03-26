@@ -11,13 +11,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
-    "pretty": true,
-    "baseUrl": "src/",
-    "paths": {
-      "*": [
-        "node_modules/*",
-      ]
-    }
+    "pretty": true
   },
   "include": [
     "src/**/*",
