@@ -13,11 +13,11 @@ import { AuthToken } from '../../../models/authToken/authTokenSchema';
 
 const InvalidAuthError = Unauthorized.extend({
   errcode: 'INVALID_AUTH_CREDENTIALS',
-  message: 'Auth credentials are not valid: unknown user or incorrect password',
+  message: 'Unknown email or incorrect password',
 });
 const UserNotActivatedError = Unauthorized.extend({
   errcode: 'INACTIVE_USER',
-  message: 'User is not activated, activate it first',
+  message: 'User is not activated, check the email we sent you to activate your account',
 });
 
 class EmailAuthInput {
