@@ -21,6 +21,7 @@ module.exports = {
       migrationsDir: 'migrations',
     },
   },
+  usePrebuildPostgraphileCache: false,
   hashingRounds: 10,
   // you should change this by a fixed token that you should generate securely
   // By default, the secret will always be changed and so the server will not be stateless

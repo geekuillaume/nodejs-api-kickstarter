@@ -18,7 +18,7 @@
     "watch": "concurrently 'npm:watch:*'",
     "start": "tsc && FORCE_JS=true node ./dist/src/index.js",
     "start:prod": "NODE_ENV=production node ./dist/src/index.js",
-    "build": "tsc",
+    "build": "tsc && ONLY_BUILD_CACHE=true node ./dist/src/index.js",
     "lint": "eslint src/**/*.ts",
     "lint-staged": "lint-staged",
     "db:createMigration": "ts-node ./node_modules/.bin/typeorm migration:generate -n",
