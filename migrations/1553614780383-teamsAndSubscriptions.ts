@@ -5,6 +5,7 @@ export class teamsAndSubscriptions1553614780383 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     const q = queryRunner.query.bind(queryRunner);
 
+    await q(`CREATE EXTENSION btree_gist`)
     await q(`CREATE TYPE "api_public"."subscription_plan_currency_enum"
       AS ENUM('eur', 'usd')`);
     await q(`CREATE TABLE "api_public"."subscription_plan" (
@@ -22,7 +23,14 @@ export class teamsAndSubscriptions1553614780383 implements MigrationInterface {
       "endDate" TIMESTAMP NOT NULL,
       "teamId" uuid,
       "subscriptionPlanId" uuid,
-      CONSTRAINT "PK_7e3d367ba64ecc1ec273d7559a2" PRIMARY KEY ("id"))`);
+      ${'' /* We add a constraint to prevent overlaping two subscriptions for the same team at the same time */}
+      CHECK ("startDate" < "endDate"),
+      CONSTRAINT "PK_7e3d367ba64ecc1ec273d7559a2" PRIMARY KEY ("id"),
+      CONSTRAINT "team_subscription_no_overlap" EXCLUDE USING GIST (
+        "teamId" WITH =,
+        TSRANGE("startDate", "endDate") WITH &&
+      )
+    )`);
     await q(`CREATE TABLE "api_public"."team" (
       "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
       "name" character varying NOT NULL,
@@ -56,7 +64,7 @@ export class teamsAndSubscriptions1553614780383 implements MigrationInterface {
       to "api_connected_user"
         using ("membership"."userId" = api_public.current_user_id())`);
     await q(`grant select
-      on table api_public.membership to api_connected_user`)
+      on table api_public.membership to postgraphile, api_connected_user`)
 
     await q(`ALTER TABLE "api_public"."team" enable row level security`);
     await q(`CREATE POLICY "select_team"
@@ -65,7 +73,7 @@ export class teamsAndSubscriptions1553614780383 implements MigrationInterface {
       to "api_connected_user"
         using ("team"."id" = any(api_public.current_user_teams_id()))`);
     await q(`grant select
-      on table api_public.team to api_connected_user`)
+      on table api_public.team to postgraphile, api_connected_user`)
 
     await q(`ALTER TABLE "api_public"."team_subscription" enable row level security`);
     await q(`CREATE POLICY "select_team_subscription"
@@ -74,13 +82,42 @@ export class teamsAndSubscriptions1553614780383 implements MigrationInterface {
       to "api_connected_user"
         using ("team_subscription"."teamId" = any(api_public.current_user_teams_id()))`);
     await q(`grant select
-      on table api_public.team_subscription to api_connected_user`)
+      on table api_public.team_subscription to postgraphile, api_connected_user`)
 
-    // TODO: add permissions for subscriptionPlans (public and past private plans)
+    await q(`CREATE FUNCTION api_public.team_current_subscription(team api_public.team) RETURNS api_public.team_subscription AS $$
+      SELECT * from "api_public"."team_subscription"
+        WHERE "team_subscription"."teamId" = team.id
+          AND
+          "team_subscription"."startDate" < now()
+          AND
+          "team_subscription"."endDate" > now()
+        LIMIT 1
+    $$ LANGUAGE sql stable`)
+    await q(`grant execute
+      on function api_public.team_current_subscription(api_public.team)
+      to postgraphile, api_connected_user`)
+
+    // User can select any public subscription or
+    // any private subscription he was subscribed to before or now
+    await q(`CREATE FUNCTION api_public.all_subscription_plans_id() RETURNS uuid[] AS $$
+      SELECT array_agg("team_subscription"."subscriptionPlanId") from "api_public"."team_subscription"
+    $$ LANGUAGE sql stable`)
+
+    await q(`ALTER TABLE "api_public"."subscription_plan" enable row level security`);
+    await q(`CREATE POLICY "select_subscription_plan"
+      on "api_public"."subscription_plan"
+      for select
+      to "api_connected_user"
+        using (
+          "subscription_plan"."public" = true
+          OR
+          "subscription_plan"."id" = any(api_public.all_subscription_plans_id())
+        )`);
+    await q(`grant select
+      on table api_public.subscription_plan to postgraphile, api_connected_user`)
+
     // TODO: add permissions for delete memberships
     // TODO: add invite route by email
-    // TODO: add constraint for membership(userId, teamId)
-    // TODO: add function for current plan query
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {

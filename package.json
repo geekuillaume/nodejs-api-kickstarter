@@ -62,7 +62,7 @@
     "ts-node": "^8.0.2",
     "type-graphql": "^0.17.0",
     "typeorm": "^0.2.13",
-    "typescript": "^3.3.3",
+    "typescript": "^3.4.1",
     "uuid": "^3.2.1"
   },
   "devDependencies": {

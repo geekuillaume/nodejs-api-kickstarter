@@ -24,7 +24,7 @@ export const attachRequestContext = async (ctx: Context, next: () => Promise<any
     }
     const transaction = config.get('testMode') ? globalTransaction : await initTransaction();
 
-    asyncContext.entityManager = transaction.manager;
+    asyncContext.transaction = transaction;
     try {
       await next();
       // we don't commit the transaction if we are running in test mode

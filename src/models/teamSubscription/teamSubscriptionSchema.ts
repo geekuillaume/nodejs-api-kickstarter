@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToOne,
+  Entity, PrimaryGeneratedColumn, Column, ManyToOne, Index,
 } from 'typeorm';
 import { Team } from '../team/teamSchema';
 import { SubscriptionPlan } from '../subscriptionPlan/subscriptionPlanSchema';
@@ -11,10 +11,12 @@ export class TeamSubscription {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index()
   @ManyToOne(() => Team)
   team: Team;
 
   @ManyToOne(() => SubscriptionPlan)
+  @Index()
   subscriptionPlan: SubscriptionPlan;
 
   @Column()

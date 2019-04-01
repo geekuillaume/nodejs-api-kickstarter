@@ -8,8 +8,14 @@ export class init1552471304887 implements MigrationInterface {
     await q(`create schema "api_public"`);
     await q(`create schema "api_private"`);
 
+    await q(`grant usage on schema api_public to postgraphile`);
+    await q(`alter default privileges in schema api_public grant usage, select on sequences to postgraphile`)
+
     await q(`create role api_anonymous`);
     await q(`create role api_connected_user`);
+
+    await q(`grant api_anonymous to postgraphile`)
+    await q(`grant api_connected_user to postgraphile`)
 
     await q(`CREATE FUNCTION api_public.current_user_id() RETURNS uuid AS $$
       select current_setting('api.user.id', true)::uuid
@@ -76,16 +82,16 @@ export class init1552471304887 implements MigrationInterface {
 
     await q(`grant usage
       on schema api_public
-      to api_anonymous, api_connected_user;`);
+      to postgraphile, api_anonymous, api_connected_user;`);
     await q(`grant execute
       on function api_public.current_user_id()
-      to api_anonymous, api_connected_user;`)
+      to postgraphile, api_connected_user;`)
     await q(`grant select, delete
-      on table api_public.todo to api_connected_user`)
+      on table api_public.todo to postgraphile, api_connected_user`)
     await q(`grant insert (name, comment), update (name, comment)
-      on table api_public.todo to api_connected_user`)
+      on table api_public.todo to postgraphile, api_connected_user`)
     await q(`grant select
-      on table api_public.users to api_connected_user`)
+      on table api_public.users to postgraphile, api_connected_user`)
 
     await q(`comment on table "api_public"."users" is E'@omit delete,create,all'`)
     await q(`comment on function "api_public"."current_user_id" is E'@omit execute'`)

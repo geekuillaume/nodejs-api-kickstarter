@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, ManyToOne, Column,
+  Entity, PrimaryGeneratedColumn, ManyToOne, Column, Index,
 } from 'typeorm';
 import { dbManager } from '../../models/db';
 import { User } from '../../models/user/userSchema';
@@ -12,6 +12,7 @@ export enum AuthMethodType {
 @Entity({
   schema: 'api_private',
 })
+@Index((t) => [t.user, t.type], { unique: true })
 export class AuthMethod {
   @PrimaryGeneratedColumn('uuid')
   id: string;

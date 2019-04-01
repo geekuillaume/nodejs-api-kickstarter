@@ -11,7 +11,8 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
-    "pretty": true
+    "pretty": true,
+    "incremental": true,
   },
   "include": [
     "src/**/*",

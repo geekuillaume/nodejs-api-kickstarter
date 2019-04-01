@@ -5,3 +5,4 @@ coverage
 config/local.js
 db.sqlite
 dist
+.tsbuildinfo

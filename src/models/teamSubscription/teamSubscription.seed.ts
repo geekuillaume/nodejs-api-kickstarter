@@ -24,6 +24,12 @@ export const getSeededTeamSubscriptions = memoize(() => {
     subscriptionPlan: subscriptionPlans[2], // Monthly USD
     startDate: DateTime.fromISO('2019-03-01').toJSDate(),
     endDate: DateTime.fromISO('2019-03-01').plus({ day: subscriptionPlans[2].durationInDays }).toJSDate(),
+  }, {
+    id: generateTestUuid('teamSubscription', 2),
+    team: team[0],
+    subscriptionPlan: subscriptionPlans[4], // Monthly USD
+    startDate: DateTime.fromISO('2019-03-01').toJSDate(),
+    endDate: DateTime.fromISO('2019-03-01').plus({ day: subscriptionPlans[4].durationInDays }).toJSDate(),
   }];
 
   return teamSubscriptions.map((teamSubscription) => dbManager().create(TeamSubscription, teamSubscription));

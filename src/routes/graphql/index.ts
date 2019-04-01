@@ -4,15 +4,15 @@ import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { Context } from 'koa';
 
 import { resolve } from 'path';
-import { getPgOptions } from '../../models/db';
 import { authenticateExtension } from './extensions/authenticate';
 import { healthcheckExtension } from './extensions/healthcheck';
 import { registerExtension } from './extensions/register';
+import { createTeamExtension } from './extensions/createTeam';
 
 const { ONLY_BUILD_CACHE } = process.env;
 
 export const attachGraphql = async (app) => {
-  const pgql = postgraphile(await getPgOptions(), 'api_public', {
+  const pgql = postgraphile(config.get('postgraphileDb'), 'api_public', {
     ignoreRBAC: false,
     ignoreIndexes: false,
     dynamicJson: true,
@@ -28,7 +28,13 @@ export const attachGraphql = async (app) => {
       authenticateExtension,
       healthcheckExtension,
       registerExtension,
+      createTeamExtension,
     ],
+    additionalGraphQLContextFromRequest: async (ctx) => {
+      // eslint-disable-next-line no-underscore-dangle
+      const koaCtx = (ctx as any)._koaCtx as Context;
+      return koaCtx;
+    },
     pgSettings: async (ctx) => {
       // eslint-disable-next-line no-underscore-dangle
       const koaCtx = (ctx as any)._koaCtx as Context;

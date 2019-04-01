@@ -10,7 +10,6 @@ import { User } from '../../../models/user/userSchema';
 import { BadRequest } from '../../../lib/errors';
 import { transformAndValidate } from '../../../lib/helpers';
 import { AuthMethodType, AuthMethod } from '../../../models/authMethod/authMethodSchema';
-import { AuthToken } from '../../../models/authToken/authTokenSchema';
 import { dbManager } from '../../../models/db';
 
 const EmailAlreadyUsed = BadRequest.extend({
@@ -29,7 +28,6 @@ class RegisterInput {
 
 
 export const registerExtension = makeExtendSchemaPlugin((build) => {
-  const { pgSql: sql } = build;
   return {
     typeDefs: gql`
       input RegisterInput {
@@ -60,31 +58,6 @@ export const registerExtension = makeExtendSchemaPlugin((build) => {
           });
           authMethod.password = registerBody.password;
           await dbManager().save(authMethod);
-
-          // const auth = await AuthMethod.getAuth({
-          //   type: AuthMethodType.EMAIL,
-          //   email: authBody.email,
-          // });
-          // // not exposing if email is registered or not
-          // InvalidAuthError.assert(auth);
-          // const isCorrectPassword = await auth.compareHash(authBody.password);
-          // InvalidAuthError.assert(isCorrectPassword);
-          // UserNotActivatedError.assert(auth.active && auth.user.active);
-          // const { token } = await AuthToken.createForUser(auth.user);
-          // await pgClient.query('SELECT set_config($1, $2, true)', ['role', 'api_connected_user']);
-          // await pgClient.query('SELECT set_config($1, $2, true)', ['api.user.id', auth.user.id]);
-          // const [user] = await resolveInfo.graphile.selectGraphQLResultFromTable(
-          //   sql.fragment`api_public.users`,
-          //   (tableAlias, sqlBuilder) => {
-          //     sqlBuilder.where(
-          //       sql.fragment`${tableAlias}.id = ${sql.value(auth.user.id)}`,
-          //     );
-          //   },
-          // );
-          // return {
-          //   token,
-          //   data: user,
-          // };
         },
       },
     },

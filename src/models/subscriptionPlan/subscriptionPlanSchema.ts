@@ -14,7 +14,9 @@ export class SubscriptionPlan {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   name: string;
 
   @Column({
@@ -25,6 +27,7 @@ export class SubscriptionPlan {
 
   @Column({
     nullable: true,
+    unique: true,
   })
   stripePlanId?: string;
 

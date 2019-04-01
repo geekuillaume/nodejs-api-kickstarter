@@ -1,8 +1,6 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToOne,
+  Entity, PrimaryGeneratedColumn, Column, ManyToOne, Index,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
-import { MinLength, IsDefined } from 'class-validator';
 import { dbManager } from '../../models/db';
 import { User } from '../user/userSchema';
 
@@ -13,19 +11,16 @@ export class Todo {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @IsDefined()
-  @MinLength(1)
   @Column()
   name: string;
 
   @Column({ nullable: true })
   comment: string;
 
-  @Exclude({ toClassOnly: true })
+  @Index()
   @Column()
   creatorId: string;
 
-  @Exclude({ toClassOnly: true })
   @ManyToOne(() => User)
   creator: User;
 
