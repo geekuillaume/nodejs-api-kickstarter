@@ -26,6 +26,10 @@ module.exports = {
         "@typescript-eslint/explicit-member-accessibility": 0,
         "lines-between-class-members": 0,
         "class-methods-use-this": 0,
+        "quotes": ["error", "single", {
+            "avoidEscape": true,
+            "allowTemplateLiterals": true
+        }]
     },
     "plugins": [
         "@typescript-eslint",
