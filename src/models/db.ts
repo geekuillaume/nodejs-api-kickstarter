@@ -41,7 +41,8 @@ export const dbManager = () => {
   // if we are in a query, use the entity manager created for the context
   // which is a way to handle a transaction per request
   // else use the global object
-  return asyncContext.transaction.manager as EntityManager || connection.manager;
+  return (asyncContext.transaction && asyncContext.transaction.manager as EntityManager)
+    || connection.manager;
 };
 
 export const commitTransaction = async () => {

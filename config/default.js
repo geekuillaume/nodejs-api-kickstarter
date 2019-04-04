@@ -21,6 +21,11 @@ module.exports = {
       migrationsDir: 'migrations',
     },
   },
+  postgraphileDb: {
+    host: '127.0.0.1',
+    database: 'kickstarter',
+    user: 'postgraphile',
+  },
   usePrebuildPostgraphileCache: false,
   hashingRounds: 10,
   // you should change this by a fixed token that you should generate securely

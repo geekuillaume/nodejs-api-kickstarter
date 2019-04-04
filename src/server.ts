@@ -31,7 +31,7 @@ export const initApp = async () => {
   // every log call will contain a unique request id
   app.use(attachRequestContext);
 
-  app.use(koaPinoLogger(pinoOptions));
+  // app.use(koaPinoLogger(pinoOptions));
 
   app.use(cors());
   // There is some default limits on the size of each type of body
