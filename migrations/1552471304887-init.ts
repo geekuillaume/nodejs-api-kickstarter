@@ -5,6 +5,8 @@ export class init1552471304887 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     const q = queryRunner.query.bind(queryRunner);
 
+    await q(`create extension if not exists "uuid-ossp" with schema public`);
+
     await q(`create schema "api_public"`);
     await q(`create schema "api_private"`);
 
@@ -20,30 +22,56 @@ export class init1552471304887 implements MigrationInterface {
     await q(`CREATE FUNCTION api_public.current_user_id() RETURNS uuid AS $$
       select current_setting('api.user.id', true)::uuid
     $$ LANGUAGE sql stable`)
+    await q(`COMMENT ON FUNCTION api_public.current_user_id() is E'@omit execute'`)
 
     await q(`CREATE TABLE "api_public"."users" (
-        "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-        "email" character varying NOT NULL,
-        "active" boolean NOT NULL DEFAULT false,
-        "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
-        "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-        CONSTRAINT "UQ_f1c105576275c5e14ffd5433b06" UNIQUE ("email"),
-        CONSTRAINT "PK_3a3c76fd9951a6bece7296fee06" PRIMARY KEY ("id")
-      )`);
-    await q(`CREATE INDEX "IDX_f1c105576275c5e14ffd5433b0" ON "api_public"."users" ("email") `);
+      "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
+      "email" character varying NOT NULL,
+      "active" boolean NOT NULL DEFAULT false,
+      "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+      "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+      CONSTRAINT "UQ_users_id" UNIQUE ("email"),
+      CONSTRAINT "PK_users_id" PRIMARY KEY ("id")
+    )`);
+    await q(`CREATE INDEX "IDX_users_email" ON "api_public"."users" ("email") `);
+    await q(`COMMENT ON CONSTRAINT "UQ_users_id" on "api_public"."users" is E'@omit'`)
+
+
     await q(`CREATE TABLE "api_public"."todo" (
       "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
       "name" character varying NOT NULL,
       "comment" character varying,
       "creatorId" uuid NOT NULL DEFAULT api_public.current_user_id(),
-      CONSTRAINT "PK_0467a898702d0989fffeae67507" PRIMARY KEY ("id")
-      )`);
-    await q(`CREATE TABLE "api_private"."auth_token" ("token" character varying NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "lastUsed" TIMESTAMP NOT NULL, "userId" uuid, CONSTRAINT "PK_d4ab2d7c4f0212463d0879d06e9" PRIMARY KEY ("token"))`);
+      CONSTRAINT "PK_todo_id" PRIMARY KEY ("id")
+    )`);
+    await q(`CREATE TABLE "api_private"."auth_token" (
+      "token" character varying NOT NULL,
+      "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+      "lastUsed" TIMESTAMPTZ NOT NULL,
+      "userId" uuid,
+      CONSTRAINT "PK_auth_token_token" PRIMARY KEY ("token")
+    )`);
+
     await q(`CREATE TYPE "api_private"."auth_method_type_enum" AS ENUM('email')`);
-    await q(`CREATE TABLE "api_private"."auth_method" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "type" "api_private"."auth_method_type_enum" NOT NULL DEFAULT 'email', "email" character varying NOT NULL, "hashedPassword" character varying NOT NULL, "active" boolean NOT NULL DEFAULT false, "userId" uuid, CONSTRAINT "UQ_f1ba092d9c28f209e5f2eb82375" UNIQUE ("email"), CONSTRAINT "PK_e3921e5815f2b3a2b868dc6b567" PRIMARY KEY ("id"))`);
-    await q(`ALTER TABLE "api_public"."todo" ADD CONSTRAINT "FK_cf0917c67ffe457ca6ffc8d7a26" FOREIGN KEY ("creatorId") REFERENCES "api_public"."users"("id")`);
-    await q(`ALTER TABLE "api_private"."auth_token" ADD CONSTRAINT "FK_69562a9cdded6afc05743d06ab7" FOREIGN KEY ("userId") REFERENCES "api_public"."users"("id")`);
-    await q(`ALTER TABLE "api_private"."auth_method" ADD CONSTRAINT "FK_40988a3b7924eebd060f38daf4f" FOREIGN KEY ("userId") REFERENCES "api_public"."users"("id")`);
+    await q(`CREATE TABLE "api_private"."auth_method" (
+      "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
+      "type" "api_private"."auth_method_type_enum" NOT NULL DEFAULT 'email',
+      "email" character varying NOT NULL,
+      "hashedPassword" character varying NOT NULL,
+      "active" boolean NOT NULL DEFAULT false,
+      "userId" uuid NOT NULL,
+      CONSTRAINT "UQ_auth_method_email" UNIQUE ("email"),
+      CONSTRAINT "PK_auth_method_id" PRIMARY KEY ("id")
+    )`);
+    await q(`ALTER TABLE "api_public"."todo"
+      ADD CONSTRAINT "FK_todo_creatorId" FOREIGN KEY ("creatorId")
+      REFERENCES "api_public"."users"("id")`);
+    await q(`ALTER TABLE "api_private"."auth_token"
+      ADD CONSTRAINT "FK_auth_token_userId" FOREIGN KEY ("userId")
+      REFERENCES "api_public"."users"("id")`);
+    await q(`ALTER TABLE "api_private"."auth_method"
+      ADD CONSTRAINT "FK_auth_method_userId" FOREIGN KEY ("userId")
+      REFERENCES "api_public"."users"("id")`);
 
     await q(`CREATE FUNCTION api_public.current_user() RETURNS "api_public"."users" AS $$
       SELECT * from "api_public"."users" WHERE id = api_public.current_user_id() LIMIT 1
@@ -106,14 +134,14 @@ export class init1552471304887 implements MigrationInterface {
     await q(`DROP POLICY insert_todo`);
     await q(`DROP POLICY delete_todo`);
 
-    await q(`ALTER TABLE "api_private"."auth_method" DROP CONSTRAINT "FK_40988a3b7924eebd060f38daf4f"`);
-    await q(`ALTER TABLE "api_private"."auth_token" DROP CONSTRAINT "FK_69562a9cdded6afc05743d06ab7"`);
-    await q(`ALTER TABLE "api_public"."todo" DROP CONSTRAINT "FK_cf0917c67ffe457ca6ffc8d7a26"`);
+    await q(`ALTER TABLE "api_private"."auth_method" DROP CONSTRAINT "FK_auth_method_userId"`);
+    await q(`ALTER TABLE "api_private"."auth_token" DROP CONSTRAINT "FK_auth_token_userId"`);
+    await q(`ALTER TABLE "api_public"."todo" DROP CONSTRAINT "FK_todo_creatorId"`);
     await q(`DROP TABLE "api_private"."auth_method"`);
     await q(`DROP TYPE "api_private"."auth_method_type_enum"`);
     await q(`DROP TABLE "api_private"."auth_token"`);
     await q(`DROP TABLE "api_public"."todo"`);
-    await q(`DROP INDEX "api_public"."IDX_f1c105576275c5e14ffd5433b0"`);
+    await q(`DROP INDEX "api_public"."IDX_users_email"`);
     await q(`DROP TABLE "api_public"."users"`);
 
     await q(`DROP FUNCTION api_public.current_user_id`);
