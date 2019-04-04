@@ -8,6 +8,7 @@ import { authenticateExtension } from './extensions/authenticate';
 import { healthcheckExtension } from './extensions/healthcheck';
 import { registerExtension } from './extensions/register';
 import { createTeamExtension } from './extensions/createTeam';
+import { teamInviteExtension } from './extensions/invite';
 
 const { ONLY_BUILD_CACHE } = process.env;
 
@@ -23,12 +24,14 @@ export const attachGraphql = async (app) => {
     exportGqlSchemaPath: resolve(__dirname, '../../misc/postgraphileSchema.gql'),
     writeCache: ONLY_BUILD_CACHE && resolve(__dirname, '../../misc/postgraphileCache.json'),
     readCache: config.get('usePrebuildPostgraphileCache') && resolve(__dirname, '../../misc/postgraphileCache.json'),
+    disableQueryLog: true,
     appendPlugins: [
       PgSimplifyInflectorPlugin,
       authenticateExtension,
       healthcheckExtension,
       registerExtension,
       createTeamExtension,
+      teamInviteExtension,
     ],
     additionalGraphQLContextFromRequest: async (ctx) => {
       // eslint-disable-next-line no-underscore-dangle
