@@ -1,6 +1,6 @@
 import { dbManager } from './db';
 
-import { getSeededTodos } from './todos/todos.seed';
+// import { getSeededTodos } from './todos/todos.seed';
 import { getSeededUsers } from './user/user.seed';
 import { getSeededAuthMethods } from './authMethod/authMethod.seed';
 import { getSeededAuthTokens } from './authToken/authToken.seed';
@@ -14,7 +14,7 @@ const seedDb = async () => {
     ...getSeededUsers(),
     ...(await getSeededAuthMethods()),
     ...(await getSeededAuthTokens()),
-    ...getSeededTodos(),
+    // ...getSeededTodos(),
     ...getSeededTeams(),
     ...getSeededSubscriptionPlans(),
     ...getSeededTeamSubscriptions(),

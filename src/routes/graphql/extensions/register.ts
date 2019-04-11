@@ -3,14 +3,14 @@ import {
   gql,
 } from 'graphile-utils';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail } from 'class-validator';
 import { toLower } from 'lodash';
+import { addJob } from '../../../lib/worker';
 
 import { User } from '../../../models/user/userSchema';
 import { BadRequest } from '../../../lib/errors';
 import { transformAndValidate } from '../../../lib/helpers';
-import { AuthMethodType, AuthMethod } from '../../../models/authMethod/authMethodSchema';
-import { dbManager } from '../../../models/db';
+import { dbManager, commitTransaction } from '../../../models/db';
 
 const EmailAlreadyUsed = BadRequest.extend({
   errcode: 'EMAIL_ALREADY_USED',
@@ -21,9 +21,6 @@ class RegisterInput {
   @IsEmail()
   @Transform(toLower, { toClassOnly: true })
   email: string;
-
-  @IsString()
-  password: string;
 }
 
 
@@ -32,7 +29,6 @@ export const registerExtension = makeExtendSchemaPlugin((build) => {
     typeDefs: gql`
       input RegisterInput {
         email: String!
-        password: String!
       }
 
       extend type Mutation {
@@ -41,23 +37,17 @@ export const registerExtension = makeExtendSchemaPlugin((build) => {
     `,
     resolvers: {
       Mutation: {
-        register: async (_query, args, context, resolveInfo) => {
+        register: async (_query, args) => {
           const registerBody = await transformAndValidate(RegisterInput, args.input);
 
-          const user = dbManager().create(User, { email: registerBody.email });
+          let user = dbManager().create(User, { email: registerBody.email });
           try {
-            await dbManager().save(user);
+            user = await dbManager().save(user);
           } catch (e) {
             throw new EmailAlreadyUsed();
           }
-          const authMethod = dbManager().create(AuthMethod, {
-            type: AuthMethodType.EMAIL,
-            email: registerBody.email,
-            active: false,
-            user,
-          });
-          authMethod.password = registerBody.password;
-          await dbManager().save(authMethod);
+          await commitTransaction();
+          addJob('sendActivateAccountEmail', { userId: user.id });
         },
       },
     },

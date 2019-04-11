@@ -8,7 +8,8 @@ import { authenticateExtension } from './extensions/authenticate';
 import { healthcheckExtension } from './extensions/healthcheck';
 import { registerExtension } from './extensions/register';
 import { createTeamExtension } from './extensions/createTeam';
-import { teamInviteExtension } from './extensions/invite';
+import { inviteToTeamExtension } from './extensions/inviteToTeam';
+import { setPasswordWithTokenExtension } from './extensions/setPasswordWithToken';
 
 const { ONLY_BUILD_CACHE } = process.env;
 
@@ -31,7 +32,8 @@ export const attachGraphql = async (app) => {
       healthcheckExtension,
       registerExtension,
       createTeamExtension,
-      teamInviteExtension,
+      inviteToTeamExtension,
+      setPasswordWithTokenExtension,
     ],
     additionalGraphQLContextFromRequest: async (ctx) => {
       // eslint-disable-next-line no-underscore-dangle
@@ -53,6 +55,7 @@ export const attachGraphql = async (app) => {
     },
   });
   if (ONLY_BUILD_CACHE) {
+    // eslint-disable-next-line no-console
     console.log('Cache built, exiting');
     process.exit(0);
   }

@@ -4,6 +4,7 @@ module.exports = {
   consoleLoggerEnabled: true,
   prettyPrintErrors: false,
   testMode: false,
+  webappUrl: 'http://localhost:3000',
   log: {
     level: 'debug',
     prettyPrint: false,
@@ -15,6 +16,7 @@ module.exports = {
     host: '127.0.0.1',
     database: 'kickstarter',
     username: 'postgres',
+    user: 'postgres',
     entities: ['src/models/**/*Schema.ts'],
     migrations: ['migrations/*.ts'],
     cli: {

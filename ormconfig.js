@@ -6,12 +6,8 @@ require('reflect-metadata');
 module.exports = {
   ...config.get('db'),
   entities: [
-    'dist/src/models/**/*Schema.js',
+    'dist/models/**/*Schema.js',
   ],
-  migrations: [
-    'dist/migrations/*.js',
-  ],
-  cli: { migrationsDir: 'migrations' },
   logging: true,
   logger: 'debug',
 };

@@ -15,8 +15,8 @@ module.exports = {
         // to get a nice debug view of the email you're sending without having
         // to really send them
 
-        user: 'n4eim4fmkeli3s7c@ethereal.email',
-        pass: 'yXvUDyz48jkcFM88a1',
+        user: 'heaven76@ethereal.email',
+        pass: 'n4juWaSgqtJvv5B9aW',
       },
     },
   },

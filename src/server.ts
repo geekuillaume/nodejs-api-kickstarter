@@ -4,16 +4,16 @@ import 'reflect-metadata';
 import Koa from 'koa';
 import koaBody from 'koa-bodyparser';
 import cors from '@koa/cors';
-import koaPinoLogger from 'koa-pino-logger';
+// import koaPinoLogger from 'koa-pino-logger';
 
 import {
   initHooks, initContext, getContext,
 } from './lib/asyncContext';
 import { attachRouter } from './routes/index';
 import { errorMiddleware } from './lib/errorMiddleware';
-import { pinoOptions } from './lib/log';
 import { injectUser } from './lib/authMiddleware';
 import { attachRequestContext } from './lib/requestContext';
+import { initWorker } from './lib/worker';
 
 export const initApp = async () => {
   // We are creating a root context object for call to
@@ -43,6 +43,8 @@ export const initApp = async () => {
   app.use(injectUser);
 
   await attachRouter(app);
+
+  await initWorker();
 
   return app;
 };

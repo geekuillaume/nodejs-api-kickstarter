@@ -44,6 +44,44 @@ export const attachRequestContext = async (ctx: Context, next: () => Promise<any
   });
 };
 
+export function hookTaskInDbTransaction<T>(cb: (payload: T, ...others: any[]) => Promise<any>) {
+  return (payload: T, ...others: any[]) => {
+    return initContext(async () => {
+      const asyncContext = getContext();
+      asyncContext.level = 'task';
+      addToLoggerContext({
+        contextId: await generateToken(),
+      });
+
+      // If we are in testMode, we don't want a transaction per request but
+      // instead a transaction per test-case (as a test case can have multiple request)
+      if (config.get('testMode') && !globalTransaction) {
+        globalTransaction = await initTransaction();
+      }
+      const transaction = config.get('testMode') ? globalTransaction : await initTransaction();
+
+      asyncContext.transaction = transaction;
+      try {
+        const res = await cb(payload, ...others);
+        // we don't commit the transaction if we are running in test mode
+        // it's the responsability of the test runner to call rollbackGlobalTransaction()
+        // when the test case is over
+        if (!config.get('testMode')) {
+          await transaction.commit();
+        }
+        return res;
+      } catch (e) {
+        // we throw original error even if rollback throws an error
+        try {
+          await transaction.rollback();
+          globalTransaction = undefined;
+        } catch (rollbackErr) {}
+        throw e;
+      }
+    });
+  };
+}
+
 export const rollbackGlobalTransaction = async () => {
   if (!config.get('testMode')) {
     throw new Error('Must be in test mode (testMode: true in config)');

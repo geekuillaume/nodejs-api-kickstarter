@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "removeComments": true,
+    "removeComments": false,
     "preserveConstEnums": true,
     "sourceMap": true,
     "outDir": "./dist",
@@ -13,9 +13,9 @@
     "emitDecoratorMetadata": true,
     "pretty": true,
     "incremental": true,
+    "importHelpers": true
   },
   "include": [
     "src/**/*",
-    "migrations/*"
   ],
 }

@@ -11,6 +11,7 @@ import { BadRequest, NotFound } from '../../../lib/errors';
 import { transformAndValidate } from '../../../lib/helpers';
 import { dbManager, commitTransaction } from '../../../models/db';
 import { Membership } from '../../../models/membership/membershipSchema';
+import { addJob } from '../../../lib/worker';
 
 class TeamInviteInput {
   @IsEmail()
@@ -64,9 +65,6 @@ export const inviteToTeamExtension = makeExtendSchemaPlugin((build) => {
             });
             await dbManager().save(user);
           }
-          if (!user.active) {
-            // TODO: send email to create authMethod here, same email as forgot password?
-          }
           let membership = dbManager().create(Membership, {
             user,
             team,
@@ -78,8 +76,11 @@ export const inviteToTeamExtension = makeExtendSchemaPlugin((build) => {
           } catch (e) {
             throw new AlreadyInvitedError();
           }
+          if (!user.active) {
+            addJob('sendActivateAccountEmail', { userId: user.id, teamInviteId: team.id });
+          }
           if (user.active) {
-            // TODO: send email to notify of invitation
+            addJob('sendInvitationEmail', { userId: user.id, teamId: team.id });
           }
 
           const [membershipData] = await resolveInfo.graphile.selectGraphQLResultFromTable(

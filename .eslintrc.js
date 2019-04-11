@@ -18,7 +18,7 @@ module.exports = {
             ]
         }],
         "arrow-body-style": 0,
-        "max-len": ["error", { "ignoreComments": true, "code": 120 }],
+        "max-len": [0],
         "no-empty": ["error", {"allowEmptyCatch": true}],
         "@typescript-eslint/indent": ["error", 2],
         "@typescript-eslint/explicit-function-return-type": 0,
