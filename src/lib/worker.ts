@@ -1,12 +1,13 @@
 /* eslint-disable import/no-absolute-path */
 import config from 'config';
 import {
-  initWorker as initPGWorker, Worker, TaskOptions,
-} from '/home/geekuillaume/tmp/worker';
+  run, TaskOptions, Runner,
+} from 'graphile-worker';
+import { Pool } from 'pg';
 import sendActivateAccountEmail from '../tasks/sendActivateAccountEmail';
 import sendInvitationEmail from '../tasks/sendInvitationEmail';
 
-let worker: Worker;
+let worker: Runner;
 
 const tasks = {
   sendActivateAccountEmail,
@@ -14,18 +15,16 @@ const tasks = {
 };
 
 export const initWorker = async () => {
-  worker = await initPGWorker(config.get('db'), {
+  worker = await run({
+    pgPool: new Pool(config.get('db')),
     taskList: tasks,
   });
-  worker.start();
   return worker;
 };
 
 type TasksNames = keyof typeof tasks;
 type Parameters<T> = T extends (arg1: infer T) => any ? T : never;
 type TaskParams<T extends TasksNames> = Parameters<typeof tasks[T]>;
-
-type test = TaskParams<'sendActivateAccountEmail'>;
 
 export async function addJob<T extends TasksNames>(id: T, payload: TaskParams<T>, options?: TaskOptions) {
   return worker.addJob(id, payload, options);

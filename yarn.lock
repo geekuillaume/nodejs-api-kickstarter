@@ -3453,10 +3453,10 @@ graphile-utils@^4.3.1:
     debug ">=2 <3"
     graphql ">=0.9 <0.14 || ^14.0.2"
 
-graphile-worker@^0.0.1-alpha.7:
-  version "0.0.1-alpha.7"
-  resolved "https://registry.yarnpkg.com/graphile-worker/-/graphile-worker-0.0.1-alpha.7.tgz#c1c8a2060d52c5202b1bf7e715c2af52f167d074"
-  integrity sha512-V8vg0oxy20YB4mXm2RL9U9qglYZduYkqj3u7wk0Z57TgnML0pugA7OieTnouY82aBHisRQ2SB9lcVglU/oCKJA==
+graphile-worker@^0.1.0-alpha.0:
+  version "0.1.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/graphile-worker/-/graphile-worker-0.1.0-alpha.0.tgz#0e5e0190d070d49626ebd9843ed7c39c0d0aa561"
+  integrity sha512-CevArmLwNUBHFysSyp5xwLtcTAeD5KCwCvCJ5JIlxhQGJZ/eR6lp060/YQ1QINb+UTfVjN+uyji4BGRmTPA70A==
   dependencies:
     "@types/chokidar" "^1.7.5"
     "@types/debug" "^4.1.2"
