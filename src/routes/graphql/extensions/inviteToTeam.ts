@@ -12,6 +12,7 @@ import { transformAndValidate } from '../../../lib/helpers';
 import { dbManager, commitTransaction } from '../../../models/db';
 import { Membership } from '../../../models/membership/membershipSchema';
 import { addJob } from '../../../lib/worker';
+import { SetPasswordEmailType } from '../../../tasks/sendSetPasswordEmail';
 
 class TeamInviteInput {
   @IsEmail()
@@ -77,7 +78,11 @@ export const inviteToTeamExtension = makeExtendSchemaPlugin((build) => {
             throw new AlreadyInvitedError();
           }
           if (!user.active) {
-            addJob('sendActivateAccountEmail', { userId: user.id, teamInviteId: team.id });
+            addJob('sendSetPasswordEmail', {
+              type: SetPasswordEmailType.TEAM_INVITATION_FOR_NEW_USER,
+              userId: user.id,
+              teamInviteId: team.id,
+            });
           }
           if (user.active) {
             addJob('sendInvitationEmail', { userId: user.id, teamId: team.id });

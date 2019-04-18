@@ -11,6 +11,7 @@ import { User } from '../../../models/user/userSchema';
 import { BadRequest } from '../../../lib/errors';
 import { transformAndValidate } from '../../../lib/helpers';
 import { dbManager, commitTransaction } from '../../../models/db';
+import { SetPasswordEmailType } from '../../../tasks/sendSetPasswordEmail';
 
 const EmailAlreadyUsed = BadRequest.extend({
   errcode: 'EMAIL_ALREADY_USED',
@@ -47,7 +48,10 @@ export const registerExtension = makeExtendSchemaPlugin((build) => {
             throw new EmailAlreadyUsed();
           }
           await commitTransaction();
-          addJob('sendActivateAccountEmail', { userId: user.id });
+          addJob('sendSetPasswordEmail', {
+            type: SetPasswordEmailType.ACCOUNT_ACTIVATION,
+            userId: user.id,
+          });
         },
       },
     },

@@ -4,13 +4,13 @@ import {
   run, TaskOptions, Runner,
 } from 'graphile-worker';
 import { Pool } from 'pg';
-import sendActivateAccountEmail from '../tasks/sendActivateAccountEmail';
+import sendSetPasswordEmail from '../tasks/sendSetPasswordEmail';
 import sendInvitationEmail from '../tasks/sendInvitationEmail';
 
 let worker: Runner;
 
 const tasks = {
-  sendActivateAccountEmail,
+  sendSetPasswordEmail,
   sendInvitationEmail,
 };
 

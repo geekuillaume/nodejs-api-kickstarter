@@ -10,6 +10,7 @@ import { registerExtension } from './extensions/register';
 import { createTeamExtension } from './extensions/createTeam';
 import { inviteToTeamExtension } from './extensions/inviteToTeam';
 import { setPasswordWithTokenExtension } from './extensions/setPasswordWithToken';
+import { forgotPasswordExtension } from './extensions/forgotPassword';
 
 const { ONLY_BUILD_CACHE } = process.env;
 
@@ -34,6 +35,7 @@ export const attachGraphql = async (app) => {
       createTeamExtension,
       inviteToTeamExtension,
       setPasswordWithTokenExtension,
+      forgotPasswordExtension,
     ],
     additionalGraphQLContextFromRequest: async (ctx) => {
       // eslint-disable-next-line no-underscore-dangle
